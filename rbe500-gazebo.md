@@ -4,7 +4,7 @@
 In this tutorial we will install Gazebo 11 and all its supporting files that will 
 aid us in robot simulation.
 ## Gazebo
-```
+
 Use the following commands to install Gazebo and its supplementry files
 ```
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable 
