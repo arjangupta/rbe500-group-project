@@ -1,8 +1,12 @@
 # Gazebo Installation Tutorials
-#**RBE 500 Fall**
-#*Made by Prof. Berk Calli and Yash Patil*
+
+## **RBE 500 Fall**
+
+## *Made by Prof. Berk Calli and Yash Patil*
+
 In this tutorial we will install Gazebo 11 and all its supporting files that will 
 aid us in robot simulation.
+
 ## Gazebo
 
 Use the following commands to install Gazebo and its supplementry files
