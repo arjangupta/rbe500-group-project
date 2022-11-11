@@ -45,9 +45,11 @@
       </inertial>
     </link>
 
-    <joint name="${prefix}joint1" type="continuous">
+    <joint name="${prefix}joint1" type="revolute">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}link1"/>
+      <!-- Set limits of revolute joint to -90deg to +90deg, 1000 N effort limit, velocity of 180 rad/s  -->
+      <limit lower="-1.5708" upper="1.5708" effort="0.0" velocity="3.14159"/>
       <origin xyz="0 0 ${height1 + axel_offset}" rpy="0 1.5708 0.75"/>
       <axis xyz="0 0 1"/>
       <dynamics damping="0.7"/>
