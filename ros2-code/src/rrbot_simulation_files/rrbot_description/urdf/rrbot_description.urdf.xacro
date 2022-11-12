@@ -9,6 +9,8 @@
   <xacro:property name="height1" value="2" /> <!-- Link 1 -->
   <xacro:property name="height2" value="1" /> <!-- Link 2 -->
   <xacro:property name="height3" value="1" /> <!-- Link 3 -->
+  <xacro:property name="height4" value="1" /> <!-- Link4 -->
+  <xacro:property name="prismatic_width" value="0.075" /> <!-- Thin width for prismatic link -->
   <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
   <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
 
@@ -117,17 +119,47 @@
             iyy="${mass / 12.0 * (height3*height3 + width*width)}" iyz="0.0"
             izz="${mass / 12.0 * (width*width + width*width)}"/>
           </inertial>
-        </link>
+      </link>
 
-        <joint name="${prefix}tool_joint" type="fixed">
-          <origin xyz="0 0 1" rpy="0 0 0" />
-          <parent link="${prefix}link2"/>
-          <child link="${prefix}tool_link" />
-        </joint>
+      <joint name="${prefix}tool_joint" type="prismatic">
+        <origin xyz="0 0 1" rpy="0 1.5708 0" />
+        <parent link="${prefix}link2"/>
+        <child link="${prefix}tool_link" />
+        <!-- Set limits of prismatic joint to -0.3 m to 0.3 m, 1000 N effort limit, velocity of 1 m/s  -->
+        <limit lower="-1.5708" upper="1.5708" effort="1000" velocity="1"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <dynamics damping="0.7"/>
+      </joint>
 
-        <!-- Tool Link -->
-        <link name="${prefix}tool_link">
-        </link>
+      <!-- Tool Link -->
+      <link name="${prefix}tool_link">
+        <collision>
+          <origin xyz="0 0 ${height4/2 - axel_offset}" rpy="0 0 0"/>
+          <geometry>
+            <box size="${prismatic_width} ${prismatic_width} ${height4}"/>
+          </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 ${height4/2 - axel_offset}" rpy="0 0 0"/>
+          <geometry>
+            <box size="${prismatic_width} ${prismatic_width} ${height4}"/>
+          </geometry>
+          <material name="blue">
+            <color rgba="0.0 0.0 1.0 0.5"/>
+          </material>
+        </visual>
+
+        <inertial>
+          <origin xyz="0 0 ${height4/2 - axel_offset}" rpy="0 0 0"/>
+          <mass value="${mass}"/>
+          <inertia
+            ixx="${mass / 12.0 * (prismatic_width*prismatic_width + height4*height4)}" ixy="0.0" ixz="0.0"
+            iyy="${mass / 12.0 * (height4*height4 + prismatic_width*prismatic_width)}" iyz="0.0"
+            izz="${mass / 12.0 * (prismatic_width*prismatic_width + prismatic_width*prismatic_width)}"/>
+          </inertial>
+      </link>
 
   </xacro:macro>
 
