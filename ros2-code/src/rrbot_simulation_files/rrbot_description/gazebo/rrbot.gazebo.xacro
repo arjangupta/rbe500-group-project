@@ -33,6 +33,11 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
       <material>Gazebo/Orange</material>
     </gazebo>
 
+    <!-- Tool Link (Link4) -->
+    <gazebo reference="${prefix}tool_link">
+      <material>Gazebo/Blue</material>
+    </gazebo>
+
   </xacro:macro>
 
 </robot>
