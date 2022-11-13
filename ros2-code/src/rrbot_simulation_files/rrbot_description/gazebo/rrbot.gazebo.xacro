@@ -23,7 +23,7 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
     <gazebo reference="${prefix}link1">
       <mu1>0.2</mu1>
       <mu2>0.2</mu2>
-      <material>Gazebo/Grey</material>
+      <material>Gazebo/Black</material>
     </gazebo>
 
     <!-- Link3 -->
@@ -35,7 +35,7 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
 
     <!-- Tool Link (Link4) -->
     <gazebo reference="${prefix}tool_link">
-      <material>Gazebo/Grey</material>
+      <material>Gazebo/Black</material>
     </gazebo>
 
   </xacro:macro>
