@@ -9,7 +9,7 @@
   <xacro:property name="height1" value="2" /> <!-- Link 1 -->
   <xacro:property name="height2" value="1" /> <!-- Link 2 -->
   <xacro:property name="height3" value="1.1" /> <!-- Link 3 -->
-  <xacro:property name="prismatic_width" value="0.075" /> <!-- Thin width for prismatic link -->
+  <xacro:property name="prismatic_width" value="0.035" /> <!-- Thin width for prismatic link -->
   <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
   <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
   <xacro:property name="prismatic_offset" value="${axel_offset*2 + prismatic_width/2 + width}" /> <!-- This is the descended length in the zero position of the prismatic -->
