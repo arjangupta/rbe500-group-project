@@ -124,9 +124,9 @@
       <joint name="${prefix}tool_joint" type="prismatic">
         <parent link="${prefix}link2"/>
         <child link="${prefix}tool_link" />
-        <!-- Set limits of prismatic joint to -0.3 m to 0.3 m, 1000 N effort limit, velocity of 1 m/s  -->
-        <limit lower="-1.5708" upper="1.5708" effort="1000" velocity="1"/>
-        <origin xyz="-2 0 1" rpy="0 1.5708 0" />
+        <!-- Set limits of prismatic joint -->
+        <limit lower="-0.19" upper="0.81" effort="1000" velocity="1"/>
+        <origin xyz="-0.81 0 0.9" rpy="0 1.5708 0" />
         <axis xyz="0 0 1"/>
         <dynamics damping="0.7"/>
       </joint>
