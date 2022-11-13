@@ -8,7 +8,7 @@
   <xacro:property name="width" value="0.2" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height1" value="2" /> <!-- Link 1 -->
   <xacro:property name="height2" value="1" /> <!-- Link 2 -->
-  <xacro:property name="height3" value="1" /> <!-- Link 3 -->
+  <xacro:property name="height3" value="1.1" /> <!-- Link 3 -->
   <xacro:property name="height4" value="1" /> <!-- Link4 -->
   <xacro:property name="prismatic_width" value="0.075" /> <!-- Thin width for prismatic link -->
   <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
@@ -125,8 +125,8 @@
         <parent link="${prefix}link2"/>
         <child link="${prefix}tool_link" />
         <!-- Set limits of prismatic joint -->
-        <limit lower="-0.19" upper="0.81" effort="1000" velocity="1"/>
-        <origin xyz="-0.81 0 0.9" rpy="0 1.5708 0" />
+        <limit lower="-10" upper="10" effort="1000" velocity="1"/>
+        <origin xyz="${axel_offset*2 + prismatic_width/2 + width - height4} 0 ${height3 - axel_offset*2}" rpy="0 1.5708 0" />
         <axis xyz="0 0 1"/>
         <dynamics damping="0.7"/>
       </joint>
