@@ -36,7 +36,6 @@
       <geometry>
         <box size="${width} ${width} ${height1}"/>
       </geometry>
-      <material name="orange"/>
     </visual>
 
     <inertial>
@@ -73,7 +72,6 @@
         <geometry>
           <box size="${width} ${width} ${height2}"/>
         </geometry>
-        <material name="yellow"/>
       </visual>
 
       <inertial>
@@ -110,7 +108,6 @@
           <geometry>
             <box size="${width} ${width} ${height3}"/>
           </geometry>
-          <material name="orange"/>
         </visual>
 
         <inertial>
@@ -147,7 +144,6 @@
           <geometry>
             <box size="${prismatic_width} ${prismatic_width} ${height4}"/>
           </geometry>
-          <material name="blue"/>
         </visual>
 
         <inertial>
