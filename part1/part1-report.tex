@@ -154,123 +154,88 @@
 
 \maketitle
 
-\nobreak\extramarks{Gazebo Setup}{}\nobreak{}
+\nobreak\extramarks{Problem 1}{}\nobreak{}
 
 \pagebreak
 
-\begin{homeworkProblem}[Task 1 --- Gazebo Setup]
-    Consider the following robot joint model
-    \[J\ddot{\theta}(t) + B\dot{\theta}(t) = u(t) + d(t)\]
-    where $J$ is the inertia of the link, $B$ is the effective damping on the link, $\theta$ is the joint angle, $u$ is 
-    the actuator torque (input), and $d$ is the disturbance acting on the system.
-    \vspace{0.15in}\\
-    First, assume that disturbance is zero and take \(J = 2\), \(B = 0.5\). Design a PD 
-    controller such that the closed loop system is critically damped, and settling time is 2 second. Do 
-    not do this by tuning the gains;  calculate  the  $K_p$  and  $K_d$  gains  using  natural  frequency  and 
-    damping ratio.
+\begin{homeworkProblem}[Problem 1]
+    \subsection{Create SCARA Robot in Gazebo}
 
-    \subsection{Solution}
-    Since $d(t) = 0$, \(J = 2\), \(B = 0.5\), we have
+    The 3 DOF SCARA robot we have built is shown below.
 
-    \[2 \ddot{\theta}(t) + 0.5 \dot{\theta}(t) = u(t)\]
+    \begin{figure}[h]
+        \includegraphics[scale=0.47]{gazebo-final-scara.png}
+        \centering
+    \end{figure}
 
-    Transform to Laplace domain,
+    We undertook the following steps to create our SCARA robot.
 
-    \begin{align*}
-        2 \Theta(s) s^2 + 0.5 \Theta(s) s &= U(s)
-    \end{align*}
-    \begin{equation}
-        \Theta(s) [2s^2 + 0.5s] = U(s)
-    \end{equation}
-    \begin{align*}
-        \frac{\Theta(s)}{U(s)} = \frac{1}{2s^2 + 0.5s}
-    \end{align*}
+    \subsubsection{1 --- Modify joint locations}
 
-    Let our PD controller model be
-    \[K_p e + K_d \dot{e} = u\]
-    Transform to Laplace domain,
-    \begin{align*}
-        K_p E(s) + K_d E(s) s &= U(s)\\
-        E(s) [K_p + K_d s] &= U(s)
-    \end{align*}
-    Therefore, the transfer function for the PD controller is
-    \begin{equation}
-        \frac{U(s)}{E(s)}=K_p + K_d s
-    \end{equation}
+    In the downloaded package, the RRBot robot has its revolute joints on the `sides' of its links, as shown in the following figure.
+    
+    \begin{figure}[h]
+        \includegraphics[scale=0.25]{initial-rrbot.png}
+        \centering
+    \end{figure}
 
-    Now we can draw the block diagram, as shown below.
+    However, for a standard SCARA robot, we want the revolute joints to sweep angles in the XY plane of the world frame, not in the XZ plane.
+    
+    Hence, we edited the \lstinline{<joint>} element blocks in the URDF file rrbot\_description.urdf.xacro. For the first joint, we made the following
+    change.
 
-    % \begin{figure}[h]
-    %     \includegraphics[scale=0.4]{q1-closed-loop-sys.png}
-    %     \centering
-    % \end{figure}
+    \lstinputlisting[language=XML, firstline=51,lastline=59]{../ros2-code/src/rrbot_simulation_files/rrbot_description/urdf/rrbot_description.urdf.xacro}
+    \vspace{0.15in}
 
-    From the block diagram, we can see that
-    \[E = \Theta_r - \Theta\]
+    In the above code snippet, we changed the type attribute of the joint element from continuous to revolute. We also added the limit sub-element, and
+    modified the origin and axis sub-elements. We made similar changes for the second joint, for which the code snippet is shown below.
 
-    Using equation 2,
+    \lstinputlisting[language=XML, firstline=87,lastline=95]{../ros2-code/src/rrbot_simulation_files/rrbot_description/urdf/rrbot_description.urdf.xacro}
+    \vspace{0.15in}
 
-    \[\frac{U(s)}{K_p + K_d s} = \Theta_r - \Theta\]
+    As a result, our robot now looked like the following image.
 
-    Furthermore, using equation 1,
+    \begin{figure}[h]
+        \includegraphics[scale=0.25]{top-joints-rrbot.png}
+        \centering
+    \end{figure}
 
-    \begin{align*}
-        \frac{\Theta(s) [2s^2 + 0.5s]}{K_p + K_d s} &= \Theta_r - \Theta\\
-        \frac{\Theta[2s^2 + 0.5s]}{K_p + K_d s} + \Theta &= \Theta_r\\
-        \Theta \left(\frac{2 s^2 + 0.5 s}{K_p + K_d s} + 1\right) &= \Theta\\
-        \Theta\left(\frac{2 s^2 + 0.5 s + K_p + K_d s}{K_p + K_d s}\right) &= \Theta_r\\
-    \end{align*}
-    Therefore,
-    \[
-        \frac{\Theta}{\Theta_r}=\frac{K_p + K_d s}{2 s^2 + s(0.5 + K_d) + K_p}
-    \]
+    In order to test our changes, we moved our robot by publishing joint values in the format of the following ROS command in our terminal.
 
-    So our charateristic equation is,
-    \begin{align*}
-        2 s^2 + s(0.5 + K_d) + K_p = 0\\
-        s^2 + s\frac{(0.5 + K_d)}{2} + \frac{K_p}{2} = 0
-    \end{align*}
+    \begin{lstlisting}
+        ros2 topic pub --once /forward_position_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.75 0.82]}"
+    \end{lstlisting}
 
-    The general form of the charateristic equation is
-    \[s^2 + (2\xi\omega_n)s + {\omega_n}^2 = 0\]
-    Where $\xi$ is the damping ratio and $\omega_n$ is the natural frequency.
-    \vspace*{0.3in}\\
-    Hence, we have,
-    \begin{equation}
-        {\omega_n}^2 = \frac{K_p}{2}
-    \end{equation}
-    and
-    \begin{equation}
-        2\xi\omega_n = \frac{(0.5 + K_d)}{2}
-    \end{equation}
+    \subsubsection{2 --- Add prismatic joint}
 
-    Also, we know that the natural frequency and settling time $T_s$ are related by
+    Now our revolute joints resemble those of a SCARA robot, but we still need a prismatic joint. In order to do this, we first made the following
+    changes to the rrbot\_description.urdf.xacro file.
 
-    \[\xi\omega_n T_s = 4\]
+    \lstinputlisting[language=XML, firstline=123,lastline=158]{../ros2-code/src/rrbot_simulation_files/rrbot_description/urdf/rrbot_description.urdf.xacro}
+    \vspace{0.15in}
 
-    Since we are solving for a critically damped system, we set \(\xi = 1\). We also want settling time $T_s$ = 2 seconds.\\
+    In the above code snippet, we have changed the tool joint from fixed to prismatic, defined its translation axis, set its limits, and defined its origin.
+    We defined a special \lstinline{prismatic_width} so that we could make the tool link thinner than the regular links. We also defined a
+    \lstinline{prismatic_offset} so that the tool link is slightly `lowered'. This makes it so that the zero position of the tool link is at the
+    same height as our first link, which makes our calculations consistent with our forward-kinematics derivation.\\
 
-    So, \begin{align*}
-        \xi\omega_n T_s &= 4\\
-        1 \cdot \omega_n \cdot 2 &= 4\\
-        \omega_n &= 2
-    \end{align*}
+    Next, we defined the tool joint in the rrbot.ros2\_control.xacro file, so that the command and state interfaces for ROS2 could be made available 
+    for that joint. Finally, we also edited the gazebo\_controllers.yaml file to define the tool joint as part of the three
+    controllers --- \lstinline{forward_position_controller}, 
+    \lstinline{forward_velocity_controller}, and \lstinline{forward_effort_controller}. All these modified files have been included as part of our submission
+    inside the rrbot\_description.zip compressed directory.
 
-    Plugging this into equation 3, we have
+    At this point, our robot looked as follows.
+    
+    \begin{figure}[h]
+        \includegraphics[scale=0.25]{unfinished-scara.png}
+        \centering
+    \end{figure}
 
-    \begin{align*}
-        {(2)}^2 &= \frac{K_p}{2}\\
-        4 &= \frac{K_p}{2}\\
-        \alignedbox{K_p}{=8}
-    \end{align*}
+    After this, we tweaked some offsets, adjusted some link lengths, changed the colors of the robot, and decreased the thickness of the tool link in order
+    to arrive at our finished implementation of the SCARA robot. We also used the same ROS command as earlier (except with 3 data-points this time) to ensure
+    that we were able to move all the joints of our robot.
 
-    Also, plugging in values into equation 4, we have
-
-    \begin{align*}
-        2(1)(2) &= \frac{0.5 + K_d}{2}\\
-        8 &= 0.5 + K_d\\
-        \alignedbox{K_d}{=7.5}
-    \end{align*}
 \end{homeworkProblem}
 
 \nobreak\extramarks{Question 2}{}\nobreak{}
