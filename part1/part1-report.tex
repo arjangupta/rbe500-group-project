@@ -200,6 +200,41 @@
         \centering
     \end{figure}
 
+    In order to test our changes, we moved our robot by publishing joint values in the format of the following ROS command in our terminal.
+
+    \begin{lstlisting}
+        ros2 topic pub --once /forward_position_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.75 0.82]}"
+    \end{lstlisting}
+
+    \subsubsection{2 --- Add prismatic joint}
+
+    Now our revolute joints resemble those of a SCARA robot, but we still need a prismatic joint. In order to do this, we first made the following
+    changes to the rrbot\_description.urdf.xacro file.
+
+    \lstinputlisting[language=XML, firstline=123,lastline=158]{../ros2-code/src/rrbot_simulation_files/rrbot_description/urdf/rrbot_description.urdf.xacro}
+    \vspace{0.15in}
+
+    In the above code snippet, we have changed the tool joint from fixed to prismatic, defined its translation axis, set its limits, and defined its origin.
+    We defined a special \lstinline{prismatic_width} so that we could make the tool link thinner than the regular links. We also defined a
+    \lstinline{prismatic_offset} so that the tool link is slightly `lowered'. This makes it so that the zero position of the tool link is at the
+    same height as our first link, which makes our calculations consistent with our forward-kinematics derivation.\\
+
+    Next, we defined the tool joint in the rrbot.ros2\_control.xacro file, so that the command and state interfaces for ROS2 could be made available 
+    for that joint. Finally, we also edited the gazebo\_controllers.yaml file to define the tool joint as part of the three
+    controllers --- \lstinline{forward_position_controller}, 
+    \lstinline{forward_velocity_controller}, and \lstinline{forward_effort_controller}. All these modified files have been included as part of our submission
+    inside the rrbot\_description.zip compressed directory.
+
+    At this point, our robot looked as follows.
+    
+    \begin{figure}[h]
+        \includegraphics[scale=0.25]{unfinished-scara.png}
+        \centering
+    \end{figure}
+
+    After this, we tweaked some offsets, adjusted some link lengths, changed the colors of the robot, and decreased the thickness of the tool link in order
+    to arrive at our finished implementation of the SCARA robot.
+
 \end{homeworkProblem}
 
 \nobreak\extramarks{Question 2}{}\nobreak{}

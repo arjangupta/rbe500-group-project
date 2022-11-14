@@ -120,6 +120,7 @@
           </inertial>
       </link>
 
+      <!-- Tool Joint -->
       <joint name="${prefix}tool_joint" type="prismatic">
         <parent link="${prefix}link2"/>
         <child link="${prefix}tool_link" />
