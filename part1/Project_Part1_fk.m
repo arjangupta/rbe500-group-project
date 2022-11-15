@@ -28,5 +28,8 @@ A3 = [cosd(theta(i)) (-sind(theta(i))*cosd(alpha(i))) (sind(theta(i))*sind(alpha
     0 sind(alpha(i)) cosd(alpha(i)) d(i);
     0 0 0 1];
 
-T30 = A1*A2*A3
+T30 = A1*A2*A3;
+
+% Export to latex
+latex(T30)
 

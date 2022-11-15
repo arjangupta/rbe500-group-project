@@ -250,7 +250,7 @@
     The image below shows the frame assignments for the robot.
     
     \begin{figure}[h]
-        \includegraphics[scale=0.90]{fwd-kin-frames.png}
+        \includegraphics[scale=0.55]{fwd-kin-frames-whitebg.png}
         \centering
     \end{figure}
 
@@ -276,6 +276,13 @@
     these matrices, we obtain the $T^0_3$.
 
     \lstinputlisting[language=MATLAB]{Project_Part1_fk.m}
+
+    This MATLAB script gives us the following T matrix, which is the homogeneous transformation for the end-effector with respect to the base frame. 
+
+    \[
+        T^0_3 =
+        \begin{bmatrix}\cos{q_1}\,\cos{q_2}-\sin{q_1}\,\sin{q_2} & -\cos{q_1}\,\sin{q_2}-\cos{q_2}\,\sin{q_1} & 0 & P_{2}\,\cos{q_1}+P_{3}\,\cos{q_1}\,\cos{q_2}-P_{3}\,\sin{q_1}\,\sin{q_2}\\ \cos{q_1}\,\sin{q_2}+\cos{q_2}\,\sin{q_1} & \cos{q_1}\,\cos{q_2}-\sin{q_1}\,\sin{q_2} & 0 & P_{2}\,\sin{q_1}+P_{3}\,\cos{q_1}\,\sin{q_2}+P_{3}\,\cos{q_2}\,\sin{q_1}\\ 0 & 0 & 1 & P_{1}+q_{3}\\ 0 & 0 & 0 & 1 \end{bmatrix}
+    \]
 
 \end{homeworkProblem}
 
