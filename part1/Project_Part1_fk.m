@@ -8,7 +8,7 @@ theta = [ q1 q2 0];
 d = [P1 0 q3];
 alpha = [ 0 0 0];
 
-% NOTE: Please enter theta in degrees!
+% NOTE: Please enter theta in degrees
 
 i = 1;
 A1 = [cosd(theta(i)) (-sind(theta(i))*cosd(alpha(i))) (sind(theta(i))*sind(alpha(i))) (a(i)*cosd(theta(i)));
