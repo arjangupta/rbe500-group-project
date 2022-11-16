@@ -1,9 +1,11 @@
 # RBE 500 F01 Group Project
-# November 15, 2022
+# November 16, 2022
 
 import rclpy
 import numpy as np
 import random
+import tf2_ros as tf
+from scipy.spatial.transform import Rotation as R
 
 from math import cos, sin, atan2, sqrt, acos
 from rclpy.node import Node
@@ -45,9 +47,24 @@ class Subscriber(Node):
         [0, 0, 1, (self.p1 + disp3)],
         [0, 0, 0, 1]])
 
+        rotation_matrix = np.array([[T30[0][0], T30[0][1], T30[0][2]], [T30[1][0], T30[1][1], T30[1][2]], [T30[2][0], T30[2][1], T30[2][2]]])
+        # rot = R.from_matrix(rotation_matrix)
+        quaternion = R.from_matrix(rotation_matrix).as_quat()
+    
+        pose = Pose()
+        pose.position.x = T30[0][3]
+        pose.position.y = T30[1][3]
+        pose.position.z = T30[2][3]
+        pose.orientation.x = quaternion[0]
+        pose.orientation.y = quaternion[1]
+        pose.orientation.z = quaternion[2]
+        pose.orientation.w = quaternion[3]
 
-        print('With joint positions of ' + str(joints) +' and link lengths of ' + str(link_lengths) + 
-            ' the end effector pose is: \n' + str(T30))
+        #print(p)
+
+        self.publishing = self.create_publisher(Pose, 'JointInputs', 10)
+        self.publishing.publish(pose)
+        print(pose)
 
 
 def main(args=None):
