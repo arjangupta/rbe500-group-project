@@ -43,7 +43,8 @@ A3 = [cosd(theta(i)) (-sind(theta(i))*cosd(alpha(i))) (sind(theta(i))*sind(alpha
 
 % End effector pose
 T30 = A1*A2*A3;
-end_effector = T30(1:3,4)
+end_effector_pose = T30 % display whole end-effector T matrix
+end_effector = T30(1:3,4); % use only position part of T
 
 % Inverse Kinematics
 
