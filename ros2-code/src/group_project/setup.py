@@ -20,9 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'calculate = group_project.calc_kinematics:main',
-            'service = group_project.inverse_kin_service:main'
-            'client = group_project.inverse_kinematics:main'
+            'calculate = group_project.calc_kinematics:main'
         ],
     },
 )
