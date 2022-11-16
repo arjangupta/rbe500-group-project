@@ -2,14 +2,14 @@ import rclpy
 from rclpy.node import Node
 from example_interfaces.srv import AddTwoInts
 
-
-class MinimalService(Node):
+# Service Node for inverse kinematics
+class InverseKinService(Node):
 
     def __init__(self):
-        super().__init__('minimal_service')
-        self.srv = self.create_service(AddTwoInts, 'add_two_ints', self.add_two_ints_callback)
+        super().__init__('inverse_kin_service')
+        self.srv = self.create_service(AddTwoInts, 'add_two_ints', self.calculate_inverse_kin)
 
-    def add_two_ints_callback(self, request, response):
+    def calculate_inverse_kin(self, request, response):
         response.sum = request.a + request.b
         self.get_logger().info('Incoming request\na: %d b: %d' % (request.a, request.b))
 
@@ -19,9 +19,9 @@ class MinimalService(Node):
 def main():
     rclpy.init()
 
-    minimal_service = MinimalService()
+    inverse_kin_service = InverseKinService()
 
-    rclpy.spin(minimal_service)
+    rclpy.spin(inverse_kin_service)
 
     rclpy.shutdown()
 
