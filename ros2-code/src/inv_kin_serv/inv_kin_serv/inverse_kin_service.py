@@ -12,8 +12,8 @@ class InverseKinService(Node):
 
         # Define the link lengths as given in the Gazebo setup
         self.p1=2
-        self.self.p2=1
-        self.self.p3=1
+        self.p2=1
+        self.p3=1
 
         # Create the service
         self.srv = self.create_service(InvKinSCARA, 'inverse_kin_service', self.calculate_inverse_kin)
@@ -27,7 +27,7 @@ class InverseKinService(Node):
         # As calculated in our report, q3 is simply the translation of the end effector 
         # in the negative z direction
         response.q3 = request.z - self.p1
-        print(f"Calculated\nq3:{response.q3}")
+        print(f"Calculated joint values (angles in degrees)\nq3:{response.q3}")
 
         # To find q1 and q2, we will need to apply law of cosines. For this we need 
         # alpha, beta, gamma of the triangle formed
@@ -41,7 +41,7 @@ class InverseKinService(Node):
         response.q1 = math.atan(request.y/request.x) - gamma
 
         # For reference with MATLAB script, also print q2 and q1 in degrees
-        print(f"q2:{(response.q2*180)/math.pi}\nq3:{(response.q3*180)/math.pi}")
+        print(f"q2:{(response.q2*180)/math.pi}\nq1:{(response.q1*180)/math.pi}")
 
         return response
 
