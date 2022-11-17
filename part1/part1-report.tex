@@ -379,7 +379,15 @@
         \alignedbox{q_3}{= -(P_1 - z^0_3)}
     \end{align*}
 
-    From here, the law of cosines is used to obtain unknown lengths of formed triangles and necessary angles. After this, the equations for each joint value were formed and will be solved once the end effector location is known. In the Matlab script, these values are written out and when plugging in the values found in the forward kinematics, the original joint values are found therefore proving their accuracy. Both the forward and inverse kinematics are now solved and ready to be plugged into ROS.
+    Now we have expressed all the joint variables in the form of constants of the system and end-effector position coordinates.
+    These equations for each joint value can now be solved once the end effector location is known.\\
+    In the following MATLAB script, these equations are written out, and when plugging in the 
+    values found in the forward kinematics, the original joint values are found, therefore 
+    proving their accuracy.
+
+    \lstinputlisting{Project_Part1_full.m}
+    \vspace{0.1in}
+    Both the forward and inverse kinematics are now solved and ready to be plugged into ROS.
 \end{homeworkProblem}
 
 \end{document}

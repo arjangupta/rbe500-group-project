@@ -1,8 +1,6 @@
 % Group Project Part 1 Forward and Inverse Kinematics
-% Last updated 11/14/2022
 
-clc
-clear
+clc; clear
 
 % Forward Kinematics
 
