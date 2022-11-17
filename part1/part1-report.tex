@@ -329,10 +329,42 @@
     \vspace{0.05in}\\
     \underline{Top view}
     \begin{figure}[h]
-        \includegraphics[scale=0.5]{top-view-inv-kin.png}
+        \includegraphics[scale=0.55]{top-view-inv-kin.png}
         \centering
         \caption{Top view for inverse kinematics}
     \end{figure}
+    
+    From the figure above, $q_1$ can be expressed as
+    \begin{align*}
+        \boxed{q_1 = \arctan \left( \frac{y^0_3}{x^0_3} \right) - \gamma}
+    \end{align*}
+    Similarly, $q_2$ can be expressed as,
+    \begin{align*}
+        \alignedbox{q_2}{= 180\degree - \beta}
+    \end{align*}
+
+    In order to find $\alpha$ and $\gamma$, we can use the law of cosines. For instance, $\alpha$ can be found as follows,
+    \begin{align*}
+        &{P_2}^2 = r^2 + {P_3}^2 - 2 r P_3 \cos \alpha\\
+        &2 r P_3 \cos \alpha = r^2 + {P_3}^2 - {P_2}^2\\
+        &\alpha = \arccos \left( \frac{r^2 + {P_3}^2 - {P_2}^2}{2 r P_3} \right)
+    \end{align*}
+
+    Similarly, $\gamma$ can be expressed as,
+
+    \[
+        \gamma = \arccos \left( \frac{r^2 + {P_2}^2 - {P_3}^2}{2 r P_3} \right)
+    \]
+
+    Hence, $\beta$ can be written as,
+    \[
+        \beta = 180\degree - \alpha - \gamma
+    \]
+
+    Also, we can express r in its norm,
+    \[
+        r = \sqrt{{(y^0_3)}^2 + {(x^0_3)}^2}
+    \]
 
     \underline{Side view}
     \begin{figure}[h]
@@ -341,10 +373,10 @@
         \caption{Side view for inverse kinematics}
     \end{figure}
 
-    From the figure, we can see that
+    From the figure, we can find $q_3$ as follows
     \begin{align*}
-        z^0_3 &= p_1 - q_3\\
-        \alignedbox{q_3}{= -(p_1 - z^0_3)}
+        z^0_3 &= P_1 - q_3\\
+        \alignedbox{q_3}{= -(P_1 - z^0_3)}
     \end{align*}
 
     From here, the law of cosines is used to obtain unknown lengths of formed triangles and necessary angles. After this, the equations for each joint value were formed and will be solved once the end effector location is known. In the Matlab script, these values are written out and when plugging in the values found in the forward kinematics, the original joint values are found therefore proving their accuracy. Both the forward and inverse kinematics are now solved and ready to be plugged into ROS.
