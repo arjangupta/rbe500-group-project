@@ -240,6 +240,81 @@
 
 \nobreak\extramarks{Question 2}{}\nobreak{}
 
-\pagebreak
+\begin{homeworkProblem}[Question 2]
+    \subsection{Forward Kinematics for SCARA}
+
+    Before implementing forward kinematics in ROS, we worked out a derivation for the forward kinematics of the SCARA robot model.
+
+    \subsubsection{Derviation}
+
+    The image below shows the frame assignments for the robot.
+    
+    \begin{figure}[h]
+        \includegraphics[scale=0.55]{fwd-kin-frames-whitebg.png}
+        \centering
+    \end{figure}
+
+    Based on this, we can form the DH table as shown on the next page.
+    
+    \vspace{3in}
+    
+    \begin{table}[h!]
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            Link & $\alpha_i$ & $a_i$ & $\theta_i$ & $d_i$ \\
+            \hline
+            1 & 0 & $p_2$ & $q_1$ & $p_1$ \\
+            2 & 0 & $p_3$ & $q_2$ & 0\\
+            3 & 0 & 0 & 0 & $q_3$ \\
+            \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+    Next, we create a MATLAB script as shown below. We use the matrix obtained from equation 3.10 of the textbook to write \(A_1, A_2, A_3\). By multiplying 
+    these matrices, we obtain the $T^0_3$.
+
+    \lstinputlisting[language=MATLAB]{Project_Part1_fk.m}
+
+    This MATLAB script gives us the following $T^0_3$ matrix, which is the homogeneous transformation for the end-effector with respect to the base frame. 
+
+    \[
+        \begin{bmatrix}\cos{q_1}\,\cos{q_2}-\sin{q_1}\,\sin{q_2} & -\cos{q_1}\,\sin{q_2}-\cos{q_2}\,\sin{q_1} & 0 & P_{2}\,\cos{q_1}+P_{3}\,\cos{q_1}\,\cos{q_2}-P_{3}\,\sin{q_1}\,\sin{q_2}\\ \cos{q_1}\,\sin{q_2}+\cos{q_2}\,\sin{q_1} & \cos{q_1}\,\cos{q_2}-\sin{q_1}\,\sin{q_2} & 0 & P_{2}\,\sin{q_1}+P_{3}\,\cos{q_1}\,\sin{q_2}+P_{3}\,\cos{q_2}\,\sin{q_1}\\ 0 & 0 & 1 & P_{1}+q_{3}\\ 0 & 0 & 0 & 1 \end{bmatrix}
+    \]
+
+    \subsubsection{ROS Implementation of Forward Kinematics}
+
+    For implementing the ROS portion of forward kinematics, we lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus semper eget duis at tellus at. Ac turpis egestas integer eget aliquet nibh. Aliquam etiam erat velit scelerisque in. Ac turpis egestas sed tempus urna et pharetra pharetra. Faucibus in ornare quam viverra. Libero id faucibus nisl tincidunt eget.\\
+    
+    Aenean pharetra magna ac placerat vestibulum lectus mauris. Consequat nisl vel pretium lectus quam id leo. Lorem sed risus ultricies tristique nulla aliquet enim tortor at. Ligula ullamcorper malesuada proin libero nunc.
+
+    \subsubsection{Gazebo Screenshots with ROS Output}
+
+    \underline{Pose 1}
+
+    Below are screenshots for joint values $q_1 = 30\degree$, $q_2 = 47\degree$, $q_3 = 0.7$
+
+    \vspace{7in}
+
+    \underline{Pose 2}
+
+    Below are screenshots for joint values $q_1 = 72\degree$, $q_2 = 28\degree$, $q_3 = 1.05$
+
+    \vspace{5in}
+
+    \underline{Pose 3}
+
+    Below are screenshots for joint values $q_1 = 72\degree$, $q_2 = 28\degree$, $q_3 = 1.05$
+
+    \vspace{3in}
+
+\end{homeworkProblem}
+
+\nobreak\extramarks{Question 3}{}\nobreak{}
+
+\begin{homeworkProblem}[Question 3]
+    \subsection{Inverse Kinematics for SCARA}
+\end{homeworkProblem}
 
 \end{document}
