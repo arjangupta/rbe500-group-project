@@ -166,6 +166,7 @@
     \begin{figure}[h]
         \includegraphics[scale=0.47]{gazebo-final-scara.png}
         \centering
+        \caption{Final SCARA built by our team}
     \end{figure}
 
     We undertook the following steps to create our SCARA robot.
@@ -175,8 +176,9 @@
     In the downloaded package, the RRBot robot has its revolute joints on the `sides' of its links, as shown in the following figure.
     
     \begin{figure}[h]
-        \includegraphics[scale=0.25]{initial-rrbot.png}
+        \includegraphics[scale=0.24]{initial-rrbot.png}
         \centering
+        \caption{Initial RRBot in Gazebo}
     \end{figure}
 
     However, for a standard SCARA robot, we want the revolute joints to sweep angles in the XY plane of the world frame, not in the XZ plane.
@@ -198,6 +200,7 @@
     \begin{figure}[h]
         \includegraphics[scale=0.25]{top-joints-rrbot.png}
         \centering
+        \caption{RRBot with top-joints}
     \end{figure}
 
     In order to test our changes, we moved our robot by publishing joint values in the format of the following ROS command in our terminal.
@@ -230,6 +233,7 @@
     \begin{figure}[h]
         \includegraphics[scale=0.25]{unfinished-scara.png}
         \centering
+        \caption{SCARA configuration without finishing touches}
     \end{figure}
 
     After this, we tweaked some offsets, adjusted some link lengths, changed the colors of the robot, and decreased the thickness of the tool link in order
@@ -250,13 +254,12 @@
     The image below shows the frame assignments for the robot.
     
     \begin{figure}[h]
-        \includegraphics[scale=0.55]{fwd-kin-frames-whitebg.png}
+        \includegraphics[scale=0.45]{fwd-kin-frames-whitebg.png}
         \centering
+        \caption{Frame assignments for forward kinematics}
     \end{figure}
 
-    Based on this, we can form the DH table as shown on the next page.
-    
-    \vspace{3in}
+    Based on this, we can form the DH table as shown below.
     
     \begin{table}[h!]
         \begin{center}
@@ -276,6 +279,8 @@
     these matrices, we obtain the $T^0_3$.
 
     \lstinputlisting[language=MATLAB]{Project_Part1_fk.m}
+
+    \vspace{0.25in}
 
     This MATLAB script gives us the following $T^0_3$ matrix, which is the homogeneous transformation for the end-effector with respect to the base frame. 
 
@@ -315,6 +320,19 @@
 
 \begin{homeworkProblem}[Question 3]
     \subsection{Inverse Kinematics for SCARA}
+    Before implementing forward kinematics in ROS, we worked out a derivation for the inverse kinematics of the SCARA robot model.
+    
+    \subsubsection{Derviation}
+
+    For the inverse kinematics, a side and top view were used to geometrically solve for the unknown joint values, as shown in the figures below.
+
+    \begin{figure}[h]
+        \includegraphics[scale=0.77]{side-view-inv-kin.png}
+        \centering
+        \caption{Side View for Inverse Kinematics}
+    \end{figure}
+
+    From here, the law of cosines is used to obtain unknown lengths of formed triangles and necessary angles. After this, the equations for each joint value were formed and will be solved once the end effector location is known. In the Matlab script, these values are written out and when plugging in the values found in the forward kinematics, the original joint values are found therefore proving their accuracy. Both the forward and inverse kinematics are now solved and ready to be plugged into ROS.
 \end{homeworkProblem}
 
 \end{document}
