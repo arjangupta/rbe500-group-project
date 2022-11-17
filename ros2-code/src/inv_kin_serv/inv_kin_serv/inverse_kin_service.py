@@ -1,3 +1,4 @@
+import math
 import rclpy
 from rclpy.node import Node
 from rbe500_custom_interfaces.srv import InvKinSCARA
@@ -11,8 +12,8 @@ class InverseKinService(Node):
 
         # Define the link lengths as given in the Gazebo setup
         self.p1=2
-        self.p2=1
-        self.p3=1
+        self.self.p2=1
+        self.self.p3=1
 
         # Create the service
         self.srv = self.create_service(InvKinSCARA, 'inverse_kin_service', self.calculate_inverse_kin)
@@ -23,14 +24,24 @@ class InverseKinService(Node):
 
         # ----- Calculate joint variables ------
         
-        # As calculated in our report, q3 is simply the translation of the end effector in the negative z direction
+        # As calculated in our report, q3 is simply the translation of the end effector 
+        # in the negative z direction
         response.q3 = request.z - self.p1
+        print(f"Calculated\nq3:{response.q3}")
 
-        # To find q1 and q2, we will need to apply law of cosines. For this we need alpha, beta, gamma of the
-        # triangle formed
-        # alpha = 
-        response.q1 = float(1.0)
-        response.q2 = float(2.0)
+        # To find q1 and q2, we will need to apply law of cosines. For this we need 
+        # alpha, beta, gamma of the triangle formed
+        r = math.sqrt(request.y**2 + request.x**2)
+        alpha = math.acos(((r**2) + (self.p3**2) - (self.p2**2))/(2*r*self.p3))
+        gamma = math.acos(((self.p2**2)+(r**2)-(self.p3**2))/(2*self.p2*r))
+        beta = 180 - alpha - gamma
+
+        # Calculate q2 and q1 in radians
+        response.q2 = 180 - beta
+        response.q1 = math.atan(request.y/request.x) - gamma
+
+        # For reference with MATLAB script, also print q2 and q1 in degrees
+        print(f"q2:{(response.q2*180)/math.pi}\nq3:{(response.q3*180)/math.pi}")
 
         return response
 
