@@ -16,6 +16,7 @@
 \usepackage{empheq}
 \usepackage{enumitem}
 \usepackage[font=footnotesize]{caption}
+\usepackage{subcaption}
 
 \graphicspath{{./images/}}
 
@@ -324,13 +325,27 @@
     
     \subsubsection{Derviation}
 
-    For the inverse kinematics, a side and top view were used to geometrically solve for the unknown joint values, as shown in the figures below.
-
+    For the inverse kinematics, a side view and a top view were used to geometrically solve for the unknown joint values.\\
+    \vspace{0.05in}\\
+    \underline{Top view}
     \begin{figure}[h]
-        \includegraphics[scale=0.77]{side-view-inv-kin.png}
+        \includegraphics[scale=0.5]{top-view-inv-kin.png}
         \centering
-        \caption{Side View for Inverse Kinematics}
+        \caption{Top view for inverse kinematics}
     \end{figure}
+
+    \underline{Side view}
+    \begin{figure}[h]
+        \includegraphics[scale=0.47]{side-view-inv-kin.png}
+        \centering
+        \caption{Side view for inverse kinematics}
+    \end{figure}
+
+    From the figure, we can see that
+    \begin{align*}
+        z^0_3 &= p_1 - q_3\\
+        \alignedbox{q_3}{= -(p_1 - z^0_3)}
+    \end{align*}
 
     From here, the law of cosines is used to obtain unknown lengths of formed triangles and necessary angles. After this, the equations for each joint value were formed and will be solved once the end effector location is known. In the Matlab script, these values are written out and when plugging in the values found in the forward kinematics, the original joint values are found therefore proving their accuracy. Both the forward and inverse kinematics are now solved and ready to be plugged into ROS.
 \end{homeworkProblem}
