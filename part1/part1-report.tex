@@ -473,12 +473,36 @@
     \vspace{0.1in}
     Both the forward and inverse kinematics are now solved and ready to be plugged into ROS.
 
+    \vspace{0.3in}
     \subsubsection{ROS Implementation of Inverse Kinematics}
+    \vspace{0.1in}
 
-    For implementing the ROS portion of forward kinematics, we lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus semper eget duis at tellus at. Ac turpis egestas integer eget aliquet nibh. Aliquam etiam erat velit scelerisque in. Ac turpis egestas sed tempus urna et pharetra pharetra. Faucibus in ornare quam viverra. Libero id faucibus nisl tincidunt eget.\\
-    
-    Aenean pharetra magna ac placerat vestibulum lectus mauris. Consequat nisl vel pretium lectus quam id leo. Lorem sed risus ultricies tristique nulla aliquet enim tortor at. Ligula ullamcorper malesuada proin libero nunc.
+    For implementing the ROS portion of inverse kinematics, we need to implement a service. However,
+    before implementing the service itself we need a custom interface for the request/response structure
+    of the service. Hence, we created a new CMake package called \lstinline{rbe_custom_interfaces}.
+    Under this package, we created a new directory srv, in which we defined our custom
+    \lstinline{InvKinSCARA.srv} file. After this, we edited the CMakeLists to import the
+    \lstinline{rosidl_default_generators} so that our custom interface could be generated
+    in the intended manner in ROS.\@ Our custom interface is then built and loaded locally
+    using \lstinline{. install/setup.bash}.\\
+    \vspace{0.02in}\\
+    After our custom interface became ready, we created a new ROS Python package called
+    \lstinline{inv_kin_serv}.\\ Inside this package, under the directory of the same name as the package,
+    we created a file called\\ \lstinline{inverse_kin_service.py}. Inside this file, we declared
+    a class for our service, which we called \lstinline{InverseKinService}. The constructor of this
+    class initializes its super class and assigns the link-lengths of our robot system as its member
+    variables. The constructor then creates our service, which uses our custom interface, and
+    assigns a callback function called \lstinline{calculate_inverse_kin} that we have defined.
+    This \lstinline{calculate_inverse_kin} function calculates the joint variables from the end-effector
+    position, as we have shown in the preceding Derviation section. After building our package, we used
+    the following commands run and communicate with it.
 
+    \begin{lstlisting}[language=sh]
+        # This command launches our service, which waits for a "call", or client request.
+        ros2 run inv_kin_serv service
+        # This command calls out to the service
+        ros2 service call /inverse_kin_service rbe500_custom_interfaces/srv/InvKinSCARA "{x: 1.5133, y: 1.1612, z: 2.5}"
+    \end{lstlisting}
     \subsubsection{Terminal Screenshots of ROS Output}
 
     \underline{Screenshot 1}
