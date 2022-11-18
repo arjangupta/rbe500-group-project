@@ -204,9 +204,10 @@
         \caption{RRBot with top-joints}
     \end{figure}
 
-    In order to test our changes, we moved our robot by publishing joint values in the format of the following ROS command in our terminal.
+    In order to test our changes, we moved our robot by publishing joint values in the format of the following ROS command in our terminal.\\
+    \vspace{0.05in}
 
-    \begin{lstlisting}
+    \begin{lstlisting}[language=sh]
         ros2 topic pub --once /forward_position_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.75 0.82]}"
     \end{lstlisting}
 
@@ -299,13 +300,34 @@
 
     \underline{Pose 1}
 
-    Below are screenshots for joint values $q_1 = 30\degree$, $q_2 = 47\degree$, $q_3 = 0.7$
+    First we moved our SCARA robot by changing the joint values to $q_1 = 20\degree$, $q_2 = 35\degree$, $q_3 = 0.5$. We did this by executing the
+    following command
+    \begin{lstlisting}[language=sh]
+        ros2 topic pub --once /forward_position_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.349066 0.610865 0.5]}"
+    \end{lstlisting}
+
+    Next, we launced our forward kinematics calculation ROS node. The screenshots obtained are shown below.
+
+    \begin{figure}[h]
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[scale=0.35]{fwd-kin-pose1.png}
+            \centering
+            \caption{Gazebo robot screenshot}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[scale=0.35]{fwd-kin-termoutput1.png}
+            \centering
+            \caption{Terminal output screenshot}
+        \end{subfigure}
+        \caption{Pose 1 Screenshots}
+    \end{figure}
+
 
     \vspace{7in}
 
     \underline{Pose 2}
 
-    Below are screenshots for joint values $q_1 = 72\degree$, $q_2 = 28\degree$, $q_3 = 1.05$
+    We moved our SCARA robot by setting the joint values to $q_1 = 72\degree$, $q_2 = 28\degree$, $q_3 = 1.05$. We did this by executing the following command
 
     \vspace{5in}
 
