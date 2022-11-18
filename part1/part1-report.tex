@@ -503,19 +503,23 @@
         # This command calls out to the service
         ros2 service call /inverse_kin_service rbe500_custom_interfaces/srv/InvKinSCARA "{x: 1.5133, y: 1.1612, z: 2.5}"
     \end{lstlisting}
-    \subsubsection{Terminal Screenshots of ROS Output}
 
-    \underline{Screenshot 1}
+    \vspace{0.1in}
 
-    \vspace{1in}
+    Both ROS packages for inverse kinematics have been zipped and included in the submission with this report.
 
-    \underline{Screenshot 2}
+    \vspace{0.3in}
+    \subsubsection{Terminal Screenshot of ROS Output}
+    \vspace{0.1in}
 
-    \vspace{1in}
+    In the screenshot below (which has also been included in the inverse kinematics server package), we can see the calculated
+    ROS output for the three end-effector positions that we used as examples in the forward kinematics portion of this report.
+    Therefore this additionally proves our forward and inverse kinematics implementations.
 
-    \underline{Screenshot 3}
-
-    \vspace{1in}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=6.5in]{inv-kin-ros-output.png}
+    \end{figure}
 
 \end{homeworkProblem}
 
