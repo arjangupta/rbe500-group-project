@@ -411,13 +411,14 @@
     For the inverse kinematics, a side view and a top view were used to geometrically solve for the unknown joint values.\\
     \vspace{0.05in}\\
     \underline{Top view}
+    \vspace{0.1in}
     \begin{figure}[h]
         \includegraphics[scale=0.55]{top-view-inv-kin.png}
         \centering
         \caption{Top view for inverse kinematics}
     \end{figure}
     
-    From the figure above, $q_1$ can be expressed as
+    From Figure 9, $q_1$ can be expressed as
     \begin{align*}
         \boxed{q_1 = \arctan \left( \frac{y^0_3}{x^0_3} \right) - \gamma}
     \end{align*}
@@ -456,7 +457,7 @@
         \caption{Side view for inverse kinematics}
     \end{figure}
 
-    From the figure, we can find $q_3$ as follows
+    From Figure 10, we can find $q_3$ as follows
     \begin{align*}
         z^0_3 &= P_1 - q_3\\
         \alignedbox{q_3}{= -(P_1 - z^0_3)}
