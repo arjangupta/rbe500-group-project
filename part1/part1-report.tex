@@ -228,9 +228,9 @@
     for that joint. Finally, we also edited the gazebo\_controllers.yaml file to define the tool joint as part of the three
     controllers --- \lstinline{forward_position_controller}, 
     \lstinline{forward_velocity_controller}, and \lstinline{forward_effort_controller}. All these modified files have been included as part of our submission
-    inside the rrbot\_description.zip compressed directory.
-
-    At this point, our robot looked as follows.
+    inside the rrbot\_description.zip compressed directory.\\
+    \vspace{0.02in}\\
+    At this point, our robot looked as shown in Figure 4.
     
     \begin{figure}[h]
         \includegraphics[scale=0.25]{unfinished-scara.png}
@@ -240,7 +240,7 @@
 
     After this, we tweaked some offsets, adjusted some link lengths, changed the colors of the robot, and decreased the thickness of the tool link in order
     to arrive at our finished implementation of the SCARA robot. We also used the same ROS command as earlier (except with 3 data-points this time) to ensure
-    that we were able to move all the joints of our robot.
+    that we were able to move all the joints of our robot. This modified package has been zipped and submitted along with this report.
 
 \end{homeworkProblem}
 
@@ -250,18 +250,16 @@
     \subsection{Forward Kinematics for SCARA}
 
     Before implementing forward kinematics in ROS, we worked out a derivation for the forward kinematics of the SCARA robot model.
-
-    \subsubsection{Derviation}
-
-    The image below shows the frame assignments for the robot.
     
     \begin{figure}[h]
         \includegraphics[scale=0.4]{fwd-kin-frames-whitebg.png}
         \centering
         \caption{Frame assignments for forward kinematics}
     \end{figure}
+    
+    \subsubsection{Derviation}
 
-    Based on this, we can form the DH table as shown below.
+    Figure 5 shows the frame assignments for the robot. Based on this, we can form the DH table as shown below.\\
     
     \begin{table}[h!]
         \begin{center}
