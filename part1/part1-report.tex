@@ -351,9 +351,28 @@
 
     \underline{Pose 3}
 
-    Below are screenshots for joint values $q_1 = 72\degree$, $q_2 = 28\degree$, $q_3 = 1.05$
+    \begin{figure}[h]
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[scale=0.35]{fwd-kin-pose3.png}
+            \centering
+            \caption{Gazebo robot screenshot}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[scale=0.35]{fwd-kin-termoutput3.png}
+            \centering
+            \caption{Terminal output screenshot}
+        \end{subfigure}
+        \caption{Pose 3 Screenshots}
+    \end{figure}
 
-    \vspace{3in}
+    We moved our SCARA robot by setting the joint values to $q_1 = 45\degree$, $q_2 = 45\degree$, $q_3 = 0.65$. We did this by executing the following command
+
+    \begin{lstlisting}[language=sh]
+        ros2 topic pub --once /forward_position_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.785398 0.785398 0.65]}"
+    \end{lstlisting}
+
+    After this we launched the forward kinematics ROS node as well. The obtained screenshots are shown in Figure 8 on the previous page.
+
 
 \end{homeworkProblem}
 

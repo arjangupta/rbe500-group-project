@@ -10,9 +10,9 @@ P2 = 1;
 P3 = 1;
 
 % This will come from ROS, current values are arbitrary for testing
-q1 = 20;
-q2 = 35;
-q3 = 0.5;
+q1 = 45;
+q2 = 45;
+q3 = 0.65;
 
 % DH parameters from hand-written work
 a = [P2 P3 0];
