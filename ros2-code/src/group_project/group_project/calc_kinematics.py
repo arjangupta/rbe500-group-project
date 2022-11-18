@@ -3,14 +3,12 @@
 
 import rclpy
 import numpy as np
-import random
-import tf2_ros as tf
 from scipy.spatial.transform import Rotation as R
-
 from math import cos, sin, atan2, sqrt, acos
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 from geometry_msgs.msg import Pose
+from sensor_msgs.msg import JointState
 
 class Subscriber(Node):
 
@@ -24,13 +22,13 @@ class Subscriber(Node):
         self.p3=1
 	
 	# create the subscriber for calculating the end effector position as well as the publisher for publishing said pose
-        self.listening = self.create_subscription(Float32MultiArray, 'JointInputs', self.calculate_forward_kinematics, 10)  
+        self.listening = self.create_subscription(JointState, '/joint_states', self.calculate_forward_kinematics, 10)
         self.publishing = self.create_publisher(Pose, 'EndEffectorPose', 10)
 
     def calculate_forward_kinematics(self, mesgfrompub):
 	
 	# collect joint values from the published message
-        joint_positions = mesgfrompub.data
+        joint_positions = mesgfrompub.position
 
 	# define each joint value based on inputs
         theta1 = joint_positions[0]
