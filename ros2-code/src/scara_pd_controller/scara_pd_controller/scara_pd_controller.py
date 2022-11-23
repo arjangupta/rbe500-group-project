@@ -16,9 +16,9 @@ class ScaraPDController(Node):
 
         # Initialize member variables for reference position
         self.received_ref_pos: bool = False
-        self.ref_x: float = 0.0
-        self.ref_y: float = 0.0
-        self.ref_z: float = 0.0
+        self.ref_q1: float = 0.0
+        self.ref_q2: float = 0.0
+        self.ref_q3: float = 0.0
 
         # Initialize member variables for joint_states subscription
         self.awaiting_ref_pos_count: int = 0
@@ -59,13 +59,13 @@ class ScaraPDController(Node):
         print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
     
     def set_ref(self, request, response):
-        # Log to terminal that reference/goal position was received
-        print(f"We received an reference position of x:{request.x} y:{request.y} z:{request.z}")
-
         # Assign ref values
-        self.ref_x= request.x
-        self.ref_y= request.y
-        self.ref_z= request.z
+        self.ref_q1 = request.q1
+        self.ref_q2 = request.q2
+        self.ref_q3 = request.q3
+
+        # Log to terminal that reference/goal position was received
+        print(f"We received an reference position of x:{self.ref_q1} y:{self.ref_q2} z:{self.ref_q3}")
 
         # Set flag that we've received the goal position
         self.received_ref_pos = True

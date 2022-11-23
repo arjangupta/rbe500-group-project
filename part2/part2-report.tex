@@ -325,7 +325,21 @@
     is \lstinline{Float64MultiArray}. The class method that actually does the
     publshing is called \lstinline{run_controller}, which we now create. This
     method is called by the subscription callback after we have received the
-    reference position value.
+    reference position value.\\
+    \vspace{0in}\\
+    Now we are at a point to test the functionality of our Node.
+    We re-built and ran our Node. The Node showed printed that it 
+    successfully created the service, subscription, publisher, and client. The
+    client in our Node indicated that it was waiting for the Gazebo controller 
+    service to come online, so we launched Gazebo, after which the client activated
+    the joint effort controller. The Node then indicated that it was receiving 
+    joint information but was waiting for
+    an incoming reference position to be given. We manually made a service call
+    to give a reference position of $q_1 = 72\degree$, $q_2 = 28\degree$, $q_3 = 1.05$.
+    This was done using the following command.
+    \begin{lstlisting}
+        ros2 service call /scara_pd_controller rbe500_custom_interfaces/srv/ScaraRefPos "{q1: 1.25664, q2: 0.488692, q3: 1.05}"
+    \end{lstlisting}
 \end{homeworkProblem}
 
 \end{document}
