@@ -160,14 +160,25 @@
 \pagebreak
 
 \begin{homeworkProblem}[Problem 1]
-
     \subsection{Create ROS Package for PD Controller}
+    \vspace{0.1in}
     Before creating the ROS package for the PD controller we performed
     some reconnaissance.\\
     \vspace{0in}\\
     When we executed \lstinline{ros2 topic list}, we saw that the
-    \lstinline{/forward_effort_controller/commands} topic was part of it.\\
-
+    \lstinline{/forward_effort_controller/commands} topic was part of it.
+    We then executed the following command in an attempt to move the joints.
+    \begin{lstlisting}
+        ros2 topic pub --once /forward_effort_controller/commands std_msgs/msg/Float64MultiArray "{data: [1, 1, 1]}"
+    \end{lstlisting}
+    However, this took no effect. We remember from the last group assignment (Part 1)
+    that we executed a very similar command to make the joints move to a specific
+    position, except in that case the topic we published to was
+    \lstinline{/forward_position_controller/commands}. This gave us a hint to
+    the fact that Gazebo was preferring the position controller over the
+    effort controller. Upon discovering the \lstinline{controller_switch.cpp} file
+    in the rrbot simulation files, we realized that we must `activate' the effort
+    controller in order to use it.
 
 \end{homeworkProblem}
 
