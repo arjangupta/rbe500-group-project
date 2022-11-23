@@ -317,7 +317,15 @@
     callback for this subscription that firsts checks if we have a reference
     position to work with, and if not, simply notifies that we are awaiting the
     same. We added a print after the creation of the subscriber to inform that the
-    creation was successful.
+    creation was successful.\\
+    \vspace{0in}\\
+    We now create the publisher for sending the joint efforts to Gazebo. This
+    publisher follows our test command closely --- the topic we publish to
+    is \lstinline{/forward_effort_controller/commands}, and the message type
+    is \lstinline{Float64MultiArray}. The class method that actually does the
+    publshing is called \lstinline{run_controller}, which we now create. This
+    method is called by the subscription callback after we have received the
+    reference position value.
 \end{homeworkProblem}
 
 \end{document}
