@@ -14,6 +14,9 @@ class ScaraPDController(Node):
 
         # Initialize member variables
         self.received_ref_pos: bool = False
+        self.ref_x: float = 0.0
+        self.ref_y: float = 0.0
+        self.ref_z: float = 0.0
 
         # Create the service
         self.srv = self.create_service(ScaraRefPos, 'scara_pd_controller', self.set_ref)
@@ -22,6 +25,17 @@ class ScaraPDController(Node):
         # Log to terminal that goal position was received
         print(f"We received an reference position of x:{request.x} y:{request.y} z:{request.z}")
 
+        # Assign ref values
+        self.ref_x= request.x
+        self.ref_y= request.y
+        self.ref_z= request.z
+
+        # Set flag that we've received the goal position
+        self.received_ref_pos = True
+
+        # Return the acknowledgement
+        response.ok = True
+        return response
 
 def main():
     rclpy.init()
