@@ -172,7 +172,7 @@
     \begin{lstlisting}
         ros2 topic pub --once /forward_effort_controller/commands std_msgs/msg/Float64MultiArray "{data: [1, 1, 1]}"
     \end{lstlisting}
-    \vspace{0.15in}
+    \vspace{0.1in}
     However, this took no effect. We remember from the last group assignment (Part 1)
     that we executed a very similar command to make the joints move to a specific
     position, except in that case the topic we published to was
@@ -185,6 +185,7 @@
     \begin{lstlisting}
         ros2 service list -t    
     \end{lstlisting}
+    \vspace{0.1in}
     This helped us see that
     \lstinline{/controller_manager/switch_controller} was an available
     service we could use. Since we supplied the -t flag to this command,
@@ -194,6 +195,7 @@
     \begin{lstlisting}
         ros2 interface show controller_manager_msgs/srv/SwitchController
     \end{lstlisting}
+    \vspace{0.1in}
     Here we could see that \lstinline{activate_controllers} and 
     \lstinline{deactivate_controllers}
     were parameters of the message. Now we put together our findings and
@@ -201,9 +203,16 @@
     \begin{lstlisting}
         ros2 service call /controller_manager/switch_controller controller_manager_msgs/srv/SwitchController "{activate_controllers: ["forward_effort_controller"], deactivate_controllers: [forward_position_controller, forward_velocity_controller]}"
     \end{lstlisting}
-
+    \vspace{0.1in}
     Upon doing this, we saw the the prismatic joint drop. This means something took
-    effect. We now tried our initial command,
+    effect. To further confirm the state of each controller, we used the following
+    command,
+    \begin{lstlisting}
+        ros2 control list_controllers -v
+    \end{lstlisting}
+    \vspace{0.1in}
+    Which showed that the position and velocity controllers were now inactive.
+    We now tried our initial command,
     \begin{lstlisting}
         ros2 topic pub --once /forward_effort_controller/commands std_msgs/msg/Float64MultiArray "{data: [1, 1, 1]}"
     \end{lstlisting}
@@ -240,7 +249,7 @@
     \subsubsection{Preliminary Work for Controller}
 
     \begin{figure}[h]
-        \includegraphics[scale=0.5]{closed-loop.png}
+        \includegraphics[scale=0.45]{closed-loop.png}
         \centering
         \caption{Standard PD controlled closed-loop system}
     \end{figure}
