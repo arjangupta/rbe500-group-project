@@ -16,7 +16,7 @@ setup(
     maintainer='Joshua Gross',
     maintainer_email='jjgross@wpi.edu',
     description='This will complete the first part of the group project',
-    license='TODO: License declaration',
+    license='Property of WPI',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

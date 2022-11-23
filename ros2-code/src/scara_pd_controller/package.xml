@@ -3,9 +3,9 @@
 <package format="3">
   <name>scara_pd_controller</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="arjangupta95@gmail.com">arjan</maintainer>
-  <license>TODO: License declaration</license>
+  <description>PD Controller for SCARA</description>
+  <maintainer email="agupta11@wpi.edu">Arjan Gupta</maintainer>
+  <license>Property of WPI</license>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

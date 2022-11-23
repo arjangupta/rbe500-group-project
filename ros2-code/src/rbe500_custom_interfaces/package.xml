@@ -3,7 +3,7 @@
 <package format="3">
   <name>rbe500_custom_interfaces</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Custom Interfaces for RBE 500 Group Project</description>
   <maintainer email="agupta11@wpi.edu">Arjan Gupta</maintainer>
   <license>Property of WPI</license>
 
