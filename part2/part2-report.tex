@@ -229,8 +229,30 @@
         \item In order to hold the revolute joints in a particular angle, we needed
         to specify that we are applying 0 effort. However this did not
         instantaneously stop the rotation of these joints, we noticed a
-        de-acceleration effect before the joint came to a stop. 
+        de-acceleration effect before the joint came to a stop.
+        \item As for implementing our package, this means that we will first
+        need to execute a service call (by creating a client) to activate the
+        right controller. As for executing efforts via the PD controller, we
+        will need to account for gravity in case of the prismatic joint. 
     \end{itemize}
+
+    \vspace{0.1in}
+    \subsubsection{Preliminary Work for Controller}
+
+    \begin{figure}[h]
+        \includegraphics[scale=0.5]{closed-loop.png}
+        \centering
+        \caption{Standard PD controlled closed-loop system}
+    \end{figure}
+
+    Taking inspiration from how we have modeled PD controllers so far in
+    this course, we can imagine the control for each joint as shown in
+    Figure 1.\\
+    \vspace{0in}\\
+    Here, the $\theta_r$ (goal position) will be received via a service call.
+    Our package will must contain a service for this purpose.
+    The $\theta$ (current position) is received via the \lstinline{/joint_states}
+    topic.
 \end{homeworkProblem}
 
 \end{document}
