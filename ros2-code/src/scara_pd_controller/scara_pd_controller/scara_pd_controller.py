@@ -6,6 +6,7 @@ from rclpy.node import Node
 from rbe500_custom_interfaces.srv import ScaraRefPos
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
+from controller_manager_msgs.srv import SwitchController
 
 # Node for subscriber, publisher, service, and client
 class ScaraPDController(Node):
@@ -34,6 +35,14 @@ class ScaraPDController(Node):
         # Create the publisher that will send the joint efforts
         self.publisher = self.create_publisher(Float64MultiArray, '/forward_effort_controller/commands', 10)
         print("Done creating the publisher for sending joint efforts.")
+
+        # Create the client that will activate the required controller. 
+        self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
+        # This while loop blocks until the target service is online.
+        while not self.client.wait_for_service(timeout_sec=1.0):
+            print('The /controller_manager/switch_controller service is not yet available. Waiting again...')
+        # Activate the Gazebo effort controller
+        self.activate_effort_controller()
     
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal position to work against
@@ -74,6 +83,18 @@ class ScaraPDController(Node):
         # Return the acknowledgement
         response.ok = True
         return response
+    
+    def activate_effort_controller(self):
+        req = SwitchController.Request
+        # Set the controller we want to activate
+        req.activate_controllers = ["forward_effort_controller"]
+        # Set the controllers we want to deactivate
+        req.deactivate_controllers = ["forward_position_controller", "forward_velocity_controller"]
+        # Start an asynchronous call and then block until it is done
+        future = self.client.call_async(req)
+        rclpy.spin_until_future_complete(self, future)
+        # Report the result 
+        print(f"The result of the attempt to activate the effort controller is {future.result}")
 
 def main():
     rclpy.init()

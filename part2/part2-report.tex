@@ -327,6 +327,18 @@
     method is called by the subscription callback after we have received the
     reference position value.\\
     \vspace{0in}\\
+    Next, we can create the client that activates the effort controller and
+    deactivates the position and velocity controllers. We added this as the last
+    task that the constructor of our Node performs because we need a blocking
+    while-loop right after the client is created. This while loop continuously
+    waits and checks if the target service is online. After the service becomes
+    available, the client makes the call inside a member function we defined.
+    We named this member function \lstinline{activate_effort_controller}. Inside
+    the member function, we assign the string lists to the 
+    \lstinline{activate_controllers} and \lstinline{deactivate_controllers}
+    parameters of the Request body. Then the client starts an asynchronous call,
+    with a following call to spin until the asynchronous future is complete.\\
+    \vspace{0in}\\
     Now we are at a point to test the functionality of our Node.
     We re-built and ran our Node. The Node showed printed that it 
     successfully created the service, subscription, publisher, and client. The
