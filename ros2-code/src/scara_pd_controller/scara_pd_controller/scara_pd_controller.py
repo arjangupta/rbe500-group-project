@@ -24,11 +24,11 @@ class ScaraPDController(Node):
 
         # Create the service that receives the reference/goal position
         self.srv = self.create_service(ScaraRefPos, 'scara_pd_controller', self.set_ref)
-        print("Done creating service")
+        print("Done creating service that will receive reference/goal position.")
 
         # Create the subscriber that receives the joint state information, with a queue of 50 since it is very fast
-        self.subscription = self.create_subscription(JointState, '/joint_states', self.joint_states_callback, 50)
-        print("Done creating subscription")
+        self.subscription = self.create_subscription(JointState, '/joint_states', self.joint_states_callback, 100)
+        print("Done creating subscription that receives joint-state information.")
     
     def joint_states_callback(self, joint_state_message):
         # Only take action if we have a reference/goal position to work against

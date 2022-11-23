@@ -287,13 +287,26 @@
     package from the previous package. This interface, which we named
     \lstinline{ScaraRefPos.srv} will be used to make the service call to our
     Node to supply the reference position in order to get the controller started.
-    This service call has the 3 joint variables in its request portion and a
+    This interface can be used for a service call. The interface has the 3 joint 
+    variables in its request portion and a
     simple acknowledgement boolean inside its response portion. We now import
     this message inside our main package's python file. The custom message is
     used to create the service within our package which will set the reference
     position for the SCARA robot. We define a callback for this service which
     sets the position as member variables, as well as a flag to indicate that
-    we are ready to start our controller. 
+    we are ready to start our controller. After the service is created, we
+    log a message to stdout that informs that we have created the service
+    successfully.\\
+    \vspace{0in}\\
+    Now we move on to creating the subscriber that receives the joint state information.
+    We subscribe on the \lstinline{/joint_states} topic and indicate that we intend
+    to receive the \lstinline{JointState} message from the \lstinline{sensor_msgs}
+    package. The queue for this subscriber is 100 messages long because information
+    is published at a very high frequency on the joint states topic. We assign a
+    callback for this subscription that firsts checks if we have a reference
+    position to work with, and if not, simply notifies that we are awaiting the
+    same. We added a print after the creation of the subscriber to inform that the
+    creation was successful.
 \end{homeworkProblem}
 
 \end{document}
