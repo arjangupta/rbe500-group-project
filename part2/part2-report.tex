@@ -249,10 +249,30 @@
     this course, we can imagine the control for each joint as shown in
     Figure 1.\\
     \vspace{0in}\\
-    Here, the $\theta_r$ (goal position) will be received via a service call.
+    Here, the goal position, $\theta_r$ will be received via a service call.
     Our package will must contain a service for this purpose.
-    The $\theta$ (current position) is received via the \lstinline{/joint_states}
-    topic.
+    The current position $\theta$ is received via the \lstinline{/joint_states}
+    topic. The error, $E$ is calculated as \(E = \theta_r - \theta\). This error
+    is then with some untuned multiplier (gain) $K_p$ to obtain the first term of
+    our controller.\\
+    \vspace{0in}\\
+    Next, we need to get the derivative of the error, $\dot{E}$, which could be
+    expressed as
+    \begin{align*}
+        \dot{E} &= \dot{\theta_r} - \dot{\theta}\\
+        \dot{E} &= 0 - \dot{\theta}\\
+        \dot{E} &= - \dot{\theta} = -v
+    \end{align*}
+    Therefore the derivative of the error is the negative of $v$, the velocity of
+    the joint. This velocity can be obtained from the \lstinline{/joint_states}
+    topic or it can be approximated by looking at the position in the last `step'
+    and the current step. Once we have $\dot{E}$, we use another untuned
+    multiplier (gain) $K_d$ to obtain the second term of our 
+    controller. Therefore, our controller is
+    \[
+        F = K_p E + K_d \dot{E} = K_p E - K_d v 
+    \]
+    Where F is the resultant effort that we need to apply to the joint.
 \end{homeworkProblem}
 
 \end{document}
