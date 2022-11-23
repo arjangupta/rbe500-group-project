@@ -38,10 +38,12 @@ class ScaraPDController(Node):
 
         # Create the client that will activate the required controller. 
         self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
-        # This while loop blocks until the target service is online.
-        while not self.client.wait_for_service(timeout_sec=1.0):
+        # This while loop blocks until the target service is online. It is a 10 second
+        #  timeout in order to give Gazebo enough time to start up.
+        while not self.client.wait_for_service(timeout_sec=10.0):
             print('The /controller_manager/switch_controller service is not yet available. Waiting again...')
         # Activate the Gazebo effort controller
+        self.req: SwitchController.Request = SwitchController.Request()
         self.activate_effort_controller()
     
     def joint_states_callback(self, joint_state_msg):
@@ -85,16 +87,15 @@ class ScaraPDController(Node):
         return response
     
     def activate_effort_controller(self):
-        req = SwitchController.Request
         # Set the controller we want to activate
-        req.activate_controllers = ["forward_effort_controller"]
+        self.req.activate_controllers = ["forward_effort_controller"]
         # Set the controllers we want to deactivate
-        req.deactivate_controllers = ["forward_position_controller", "forward_velocity_controller"]
+        self.req.deactivate_controllers = ["forward_position_controller", "forward_velocity_controller"]
         # Start an asynchronous call and then block until it is done
-        future = self.client.call_async(req)
+        future = self.client.call_async(self.req)
         rclpy.spin_until_future_complete(self, future)
         # Report the result 
-        print(f"The result of the attempt to activate the effort controller is {future.result}")
+        print(f"The result of the attempt to activate the effort controller is ok: {future.result().ok}")
 
 def main():
     rclpy.init()
