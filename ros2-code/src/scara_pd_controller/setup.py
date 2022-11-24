@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'group_project'
+package_name = 'scara_pd_controller'
 
 setup(
     name=package_name,
@@ -13,14 +13,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Joshua Gross',
-    maintainer_email='jjgross@wpi.edu',
-    description='This will complete the first part of the group project',
+    maintainer='Arjan Gupta',
+    maintainer_email='agupta11@wpi.edu',
+    description='PD Controller for SCARA',
     license='Property of WPI',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'calculate = group_project.calc_kinematics:main'
+            'pd_controller = scara_pd_controller.scara_pd_controller:main'
         ],
     },
 )

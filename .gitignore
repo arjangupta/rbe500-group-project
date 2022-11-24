@@ -34,3 +34,7 @@ slprj/
 # Simulink cache & autosave files
 *.slxc
 *.slx.autosave
+
+# VS Code auto-gen
+.vscode
+build

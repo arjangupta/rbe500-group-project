@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(rbe500_custom_interfaces
   "srv/InvKinSCARA.srv"
+  "srv/ScaraRefPos.srv"
 )
 
 if(BUILD_TESTING)

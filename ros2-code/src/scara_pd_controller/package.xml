@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>group_project</name>
+  <name>scara_pd_controller</name>
   <version>0.0.0</version>
-  <description>This will complete the kinematics portion of the group project</description>
-  <maintainer email="jjgross@wpi.edu">jgross</maintainer>
+  <description>PD Controller for SCARA</description>
+  <maintainer email="agupta11@wpi.edu">Arjan Gupta</maintainer>
   <license>Property of WPI</license>
 
   <test_depend>ament_copyright</test_depend>
@@ -15,6 +15,4 @@
   <export>
     <build_type>ament_python</build_type>
   </export>
-  <exec_depend>rclpy</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
 </package>
