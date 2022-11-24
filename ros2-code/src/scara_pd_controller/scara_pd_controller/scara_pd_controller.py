@@ -118,11 +118,11 @@ class ScaraPDController(Node):
         self.ref_q3 = request.q3
 
         # Log to terminal that reference/goal position was received
-        print(f"We received an reference position of x:{self.ref_q1} y:{self.ref_q2} z:{self.ref_q3}")
+        print(f"We received reference positions of x:{self.ref_q1} y:{self.ref_q2} z:{self.ref_q3}")
 
         # Set flag that we've received the goal position
         self.received_ref_pos = True
-        print("Our controller will now begin running!")
+        print("We're ready to start our controller!")
 
         # Return the acknowledgement
         response.ok = True

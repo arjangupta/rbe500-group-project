@@ -370,6 +370,14 @@
     \begin{lstlisting}
         ros2 service call /scara_pd_controller rbe500_custom_interfaces/srv/ScaraRefPos "{q1: 1.25664, q2: 0.488692, q3: 1.05}"
     \end{lstlisting}
+    \vspace{0.1in}
+    After this service call, our node indicated that the reference positions were
+    received, and that our controller is ready to start running. Then we began
+    to see repeated messages in the terminal about our controller running along
+    with its current positions and velocities. We could see the positions and
+    velocities changing gradually. Furthermore, the robot in Gazebo was moving
+    very slowly toward the reference position. This means our controller was
+    operational, so now we can move on to the tuning and graphing of the controller.
 \end{homeworkProblem}
 
 \end{document}
