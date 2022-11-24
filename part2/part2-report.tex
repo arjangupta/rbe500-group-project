@@ -346,6 +346,15 @@
     method is called by the subscription callback after we have received the
     reference position value.\\
     \vspace{0in}\\
+    Next, we start implementing our untuned controller model in our Node. For this,
+    we defined the $K_p$ and $K_d$ values for each joint, by naming them
+    \lstinline{Kp1, Kd1, Kp2,} \ldots and so on. We initially set all of these
+    to 0.01. We defined the the errors and derivative of errors, naming them in the
+    form of \lstinline{err_q1} and \lstinline{err_dot_q1}. Then we computed the output
+    controller efforts for each joint by using the controller formula we dervied. For
+    the prismatic joint, we also added $-9.8 m/s^2$ to the output effort. Then, we
+    published these output efforts.\\
+    \vspace{0in}\\
     Now we are at a point to test the functionality of our Node.
     We re-built and ran our Node. The Node showed printed that it 
     successfully created the service, subscription, publisher, and client. The

@@ -69,11 +69,42 @@ class ScaraPDController(Node):
         q3 = joint_state_msg.position[2]
         # Get joint velocity values
         v1 = joint_state_msg.velocity[0]
-        v2 = joint_state_msg.velocity[0]
-        v3 = joint_state_msg.velocity[0]
-        print("Controller is running!")
-        print(f"Current q values are q1:{q1}, q2:{q2}, q3:{q3}")
-        print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
+        v2 = joint_state_msg.velocity[1]
+        v3 = joint_state_msg.velocity[2]
+
+        # print("Controller is running!")
+        # print(f"Current q values are q1:{q1}, q2:{q2}, q3:{q3}")
+        # print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
+        
+        # ----- Implement controller ------
+        # Define gains for q1
+        Kp1 = 0.01
+        Kd1 = 0.01
+        # Define gains for q2
+        Kp2 = 0.01
+        Kd2 = 0.01
+        # Define gains for q3
+        Kp3 = 0.01
+        Kd3 = 0.01
+        # Find errors
+        err_q1 = self.ref_q1 - q1
+        err_q2 = self.ref_q2 - q2
+        err_q3 = self.ref_q3 - q3
+        # Find error dots
+        err_dot_q1 = -1 * v1
+        err_dot_q2 = -1 * v2
+        err_dot_q3 = -1 * v3
+        # The modeled controller for each joint 
+        # (as described in our report) is
+        # F = K_p*E - K_d*v
+        output_effort_q1: float = Kp1*err_q1 + Kd1*err_dot_q1
+        output_effort_q2: float = Kp2*err_q2 + Kd2*err_dot_q2
+        output_effort_q3: float = Kp3*err_q3 + Kd3*err_dot_q3
+        # For q3, there is also a force of gravity acting upon it
+        output_effort_q3 += -9.8
+        # Publish the output efforts
+        efforts_arr: Float64MultiArray = [output_effort_q1, output_effort_q2, output_effort_q3]
+        self.publisher.publish(efforts_arr)
     
     def set_ref(self, request, response):
         # Assign ref values
