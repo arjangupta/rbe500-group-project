@@ -1,6 +1,7 @@
 # RBE 500 Group Assignment #2
 # Group 2 - Joshua Gross, Arjan Gupta, Melissa Kelly
 
+import sys
 import rclpy
 from rclpy.node import Node
 from rbe500_custom_interfaces.srv import ScaraRefPos
@@ -24,6 +25,21 @@ class ScaraPDController(Node):
         # Initialize member variables for joint_states subscription
         self.awaiting_ref_pos_count: int = 0
 
+        # Initialize member variables for client
+        self.req: SwitchController.Request = SwitchController.Request()
+
+        # Create the client that will activate the required controller. 
+        self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
+        # If we find that we had to wait for the service, it means Gazebo is not 
+        # running. We exit the program in this case because trying to call the service
+        # while Gazebo is starting up causes errors. This Node needs to be started
+        # after Gazebo is already running.
+        if not self.client.wait_for_service(timeout_sec=0.5):
+            print('The /controller_manager/switch_controller service is not available. Please launch Gazebo before running this package. Exiting.')
+            sys.exit()
+        # Activate the Gazebo effort controller
+        self.activate_effort_controller()
+
         # Create the service that receives the reference/goal position
         self.srv = self.create_service(ScaraRefPos, 'scara_pd_controller', self.set_ref)
         print("Done creating service that will receive reference/goal position.")
@@ -35,16 +51,6 @@ class ScaraPDController(Node):
         # Create the publisher that will send the joint efforts
         self.publisher = self.create_publisher(Float64MultiArray, '/forward_effort_controller/commands', 10)
         print("Done creating the publisher for sending joint efforts.")
-
-        # Create the client that will activate the required controller. 
-        self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
-        # This while loop blocks until the target service is online. It is a 10 second
-        #  timeout in order to give Gazebo enough time to start up.
-        while not self.client.wait_for_service(timeout_sec=10.0):
-            print('The /controller_manager/switch_controller service is not yet available. Waiting again...')
-        # Activate the Gazebo effort controller
-        self.req: SwitchController.Request = SwitchController.Request()
-        self.activate_effort_controller()
     
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal position to work against

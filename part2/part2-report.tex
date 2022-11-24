@@ -283,15 +283,34 @@
     \]
     Where F is the resultant effort that we need to apply to the joint.
 
-    \vspace{0.2in}
+    \vspace{0.25in}
     \subsubsection{Writing the ROS Package}
-
+    \vspace{0.15in}
     Now we create the package just as we've done in our past assignments of this
     course. Inside the package, we created a \lstinline{scara_pd_controller.py}
     file. We created an empty Node in this file which gets called by the main
     function. We edited the \lstinline{package.xml} and \lstinline{setup.py} to 
     make sure that we
     can build the basic package.\\
+    \vspace{0in}\\
+    Next, we can create the client that activates the effort controller and
+    deactivates the position and velocity controllers. We added this as the first
+    task that the constructor of our Node performs because of a specific reason,
+    which is that if the client does not find its target service, we must exit
+    the program early, and therefore creating a subscriber/publisher/service
+    would be useless in that case. Furthermore, there is also a reason we choose
+    to exit the program when the target service is not found. This is because
+    if we instead choose to wait until the service is ready, the client makes
+    its call while Gazebo is starting up, which does not properly activate
+    the effort controller. Therefore, the only reliable way to go about this
+    is to have Gazebo running steadily before we launch this Node. 
+    Once the Node is launched after the service is already
+    available, the client makes the call inside a member function we defined.
+    We named this member function \lstinline{activate_effort_controller}. Inside
+    the member function, we assign the string lists to the 
+    \lstinline{activate_controllers} and \lstinline{deactivate_controllers}
+    parameters of the Request body. Then the client starts an asynchronous call,
+    with a following call to spin until the asynchronous future is complete.\\
     \vspace{0in}\\
     Next, we added a new custom interface by editing our 
     \lstinline{rbe500_custom_interface}
@@ -326,18 +345,6 @@
     publshing is called \lstinline{run_controller}, which we now create. This
     method is called by the subscription callback after we have received the
     reference position value.\\
-    \vspace{0in}\\
-    Next, we can create the client that activates the effort controller and
-    deactivates the position and velocity controllers. We added this as the last
-    task that the constructor of our Node performs because we need a blocking
-    while-loop right after the client is created. This while loop continuously
-    waits and checks if the target service is online. After the service becomes
-    available, the client makes the call inside a member function we defined.
-    We named this member function \lstinline{activate_effort_controller}. Inside
-    the member function, we assign the string lists to the 
-    \lstinline{activate_controllers} and \lstinline{deactivate_controllers}
-    parameters of the Request body. Then the client starts an asynchronous call,
-    with a following call to spin until the asynchronous future is complete.\\
     \vspace{0in}\\
     Now we are at a point to test the functionality of our Node.
     We re-built and ran our Node. The Node showed printed that it 
