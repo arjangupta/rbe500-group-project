@@ -81,6 +81,7 @@ class ScaraPDController(Node):
             self.num_values_received += 1
         
         # ----- Implement controller ------
+        # TODO: Move these Kds and Kps to the constructor
         # Define gains for q1
         Kp1 = 0.01
         Kd1 = 0.01
