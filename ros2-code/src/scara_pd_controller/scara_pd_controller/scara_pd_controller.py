@@ -21,10 +21,9 @@ class ScaraPDController(Node):
         self.ref_q1: float = 0.0
         self.ref_q2: float = 0.0
         self.ref_q3: float = 0.0
-
         # Initialize member variables for joint_states subscription
         self.awaiting_ref_pos_count: int = 0
-
+        self.num_values_received: int = 0 # used in run_controller 
         # Initialize member variables for client
         self.req: SwitchController.Request = SwitchController.Request()
 
@@ -72,9 +71,14 @@ class ScaraPDController(Node):
         v2 = joint_state_msg.velocity[1]
         v3 = joint_state_msg.velocity[2]
 
-        # print("Controller is running!")
-        # print(f"Current q values are q1:{q1}, q2:{q2}, q3:{q3}")
-        # print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
+        # Conditional printing so that we're not printing continuously
+        if self.num_values_received >= 250:
+            print("Controller is running!")
+            print(f"Current q values are q1:{q1}, q2:{q2}, q3:{q3}")
+            print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
+            self.num_values_received = 0
+        else:
+            self.num_values_received += 1
         
         # ----- Implement controller ------
         # Define gains for q1

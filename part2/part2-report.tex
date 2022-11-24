@@ -344,7 +344,9 @@
     is \lstinline{Float64MultiArray}. The class method that actually does the
     publshing is called \lstinline{run_controller}, which we now create. This
     method is called by the subscription callback after we have received the
-    reference position value.\\
+    reference position value. Inside this method, there is a conditional print
+    that outputs the joint positions and velocities on every 100 publishes of
+    the \lstinline{/joint_states} topic.\\
     \vspace{0in}\\
     Next, we start implementing our untuned controller model in our Node. For this,
     we defined the $K_p$ and $K_d$ values for each joint, by naming them
