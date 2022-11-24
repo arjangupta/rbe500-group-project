@@ -103,7 +103,8 @@ class ScaraPDController(Node):
         # For q3, there is also a force of gravity acting upon it
         output_effort_q3 += -9.8
         # Publish the output efforts
-        efforts_arr: Float64MultiArray = [output_effort_q1, output_effort_q2, output_effort_q3]
+        efforts_arr: Float64MultiArray = Float64MultiArray()
+        efforts_arr.data = [output_effort_q1, output_effort_q2, output_effort_q3]
         self.publisher.publish(efforts_arr)
     
     def set_ref(self, request, response):
@@ -117,7 +118,7 @@ class ScaraPDController(Node):
 
         # Set flag that we've received the goal position
         self.received_ref_pos = True
-        print("We're ready to start our controller!")
+        print("Our controller will now begin running!")
 
         # Return the acknowledgement
         response.ok = True
