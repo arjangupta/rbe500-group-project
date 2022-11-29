@@ -26,6 +26,10 @@ class ScaraPDController(Node):
         self.num_values_received: int = 0 # used in run_controller 
         # Initialize member variables for client
         self.req: SwitchController.Request = SwitchController.Request()
+        # Initialize member variables for timing/graphing
+        self.q1_timer: float = 0.0
+        self.q2_timer: float = 0.0
+        self.q3_timer: float = 0.0
 
         # Create the client that will activate the required controller. 
         self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
@@ -54,6 +58,9 @@ class ScaraPDController(Node):
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal position to work against
         if self.received_ref_pos:
+            # Record the current positions for graphing
+            self.dump_graph_data(joint_state_msg)
+            # Perform the work for the PD controller
             self.run_controller(joint_state_msg)
         elif self.awaiting_ref_pos_count >= 100:
             print("Receiving joint state info. Awaiting a reference position to be given.")
@@ -61,7 +68,17 @@ class ScaraPDController(Node):
         else:
             self.awaiting_ref_pos_count += 1
 
+    def dump_graph_data(self, joint_state_msg):
+        pass
+    
     def run_controller(self, joint_state_msg):
+        """
+        This function runs our PD controller. It grabs the current positions
+        and velocities of all three joints of our SCARA robot, applies the
+        proportional and derivative gains for the error and derivative error,
+        and computes the output efforts that need to be applied to the
+        corresponding joints.
+        """
         # Get joint position values
         q1 = joint_state_msg.position[0]
         q2 = joint_state_msg.position[1]
