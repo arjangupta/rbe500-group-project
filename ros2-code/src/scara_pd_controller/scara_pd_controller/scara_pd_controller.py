@@ -25,8 +25,8 @@ class ScaraPDController(Node):
         self.awaiting_ref_pos_count: int = 0
         # Initialize member variables for run_controller method
         # Define gains for q1
-        self.Kp1 = 5
-        self.Kd1 = 10
+        self.Kp1 = 20
+        self.Kd1 = 20
         # Define gains for q2
         self.Kp2 = 1
         self.Kd2 = 5
