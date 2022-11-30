@@ -23,7 +23,17 @@ class ScaraPDController(Node):
         self.ref_q3: float = 0.0
         # Initialize member variables for joint_states subscription
         self.awaiting_ref_pos_count: int = 0
-        self.num_values_received: int = 0 # used in run_controller 
+        # Initialize member variables for run_controller method
+        # Define gains for q1
+        self.Kp1 = 5
+        self.Kd1 = 10
+        # Define gains for q2
+        self.Kp2 = 1
+        self.Kd2 = 5
+        # Define gains for q3
+        self.Kp3 = 0.01
+        self.Kd3 = 0.01
+        self.num_values_received: int = 0 
         # Initialize member variables for client
         self.req: SwitchController.Request = SwitchController.Request()
         # Initialize member variables for timing/graphing
@@ -98,16 +108,6 @@ class ScaraPDController(Node):
             self.num_values_received += 1
         
         # ----- Implement controller ------
-        # TODO: Move these Kds and Kps to the constructor
-        # Define gains for q1
-        Kp1 = 0.01
-        Kd1 = 0.01
-        # Define gains for q2
-        Kp2 = 0.01
-        Kd2 = 0.01
-        # Define gains for q3
-        Kp3 = 0.01
-        Kd3 = 0.01
         # Find errors
         err_q1 = self.ref_q1 - q1
         err_q2 = self.ref_q2 - q2
@@ -119,9 +119,9 @@ class ScaraPDController(Node):
         # The modeled controller for each joint 
         # (as described in our report) is
         # F = K_p*E - K_d*v
-        output_effort_q1: float = Kp1*err_q1 + Kd1*err_dot_q1
-        output_effort_q2: float = Kp2*err_q2 + Kd2*err_dot_q2
-        output_effort_q3: float = Kp3*err_q3 + Kd3*err_dot_q3
+        output_effort_q1: float = self.Kp1*err_q1 + self.Kd1*err_dot_q1
+        output_effort_q2: float = self.Kp2*err_q2 + self.Kd2*err_dot_q2
+        output_effort_q3: float = self.Kp3*err_q3 + self.Kd3*err_dot_q3
         # For q3, there is also a force of gravity acting upon it
         output_effort_q3 += -9.8
         # Publish the output efforts
