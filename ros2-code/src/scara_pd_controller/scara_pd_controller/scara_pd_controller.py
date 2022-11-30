@@ -25,14 +25,14 @@ class ScaraPDController(Node):
         self.awaiting_ref_pos_count: int = 0
         # Initialize member variables for run_controller method
         # Define gains for q1
-        self.Kp1 = 20
-        self.Kd1 = 20
+        self.Kp1 = 10
+        self.Kd1 = 10
         # Define gains for q2
-        self.Kp2 = 1
-        self.Kd2 = 5
+        self.Kp2 = 10
+        self.Kd2 = 10
         # Define gains for q3
-        self.Kp3 = 0.01
-        self.Kd3 = 0.01
+        self.Kp3 = 10
+        self.Kd3 = 10
         self.num_values_received: int = 0 
         # Initialize member variables for client
         self.req: SwitchController.Request = SwitchController.Request()
