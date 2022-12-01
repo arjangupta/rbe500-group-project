@@ -8,43 +8,22 @@ import time
 Joint1_ref = 5
 Joint2_ref = 2
 Joint3_ref = 1
-
 Joint1 = np.array([])
 Joint2 = np.array([])
 Joint3 = np.array([])
 
-Time1 = np.array([])
-Time2 = np.array([])
-Time3 = np.array([])
-
+Time = np.arange(0, 10, .01)
 starttime=time.time()
-end_time = starttime + (10*60)
-	
-while starttime <= end_time:
+end_time = starttime + 10
 
+for t in Time:
 	Joint1ValFromGazebo = random.randrange(0,10) #This will actually be for inserting the real joint value from Gazebo
-	Joint2ValFromGazebo = random.randrange(0,10) #This will actually be for inserting the real joint value from Gazebo
+	Joint2ValFromGazebo = random.randrange(0,10) #This will actually be for inserting the real joint value from Gazebogit
 	Joint3ValFromGazebo = random.randrange(0,10) #This will actually be for inserting the real joint value from Gazebo
-
-	if Joint1ValFromGazebo != Joint1_ref:
-		Joint1 = np.append(Joint1, Joint1ValFromGazebo) #Append Joint1 array with Gazebo joint value
-		laptime1 = time.time()-starttime
-		Time1 = np.append(Time1, laptime1)
-
-	if Joint2ValFromGazebo != Joint2_ref:
-		Joint2 = np.append(Joint2, Joint2ValFromGazebo) #Append Joint1 array with Gazebo joint value
-		laptime2 = time.time()-starttime
-		Time2 = np.append(Time2, laptime2)
-
-	if Joint3ValFromGazebo != Joint3_ref:
-		Joint3 = np.append(Joint3, Joint3ValFromGazebo) #Append Joint1 array with Gazebo joint value
-		laptime3 = time.time()-starttime
-		Time3 = np.append(Time3, laptime3)
-
-	time.sleep(0.01)
-	if (Joint1ValFromGazebo == Joint1_ref) and (Joint2ValFromGazebo == Joint2_ref) and (Joint3ValFromGazebo == Joint3_ref):
-		print("Joint Reference Value Achieved")
-		break
+	Joint1 = np.append(Joint1, Joint1ValFromGazebo) #Append Joint1 array with Gazebo joint value
+	Joint2 = np.append(Joint2, Joint2ValFromGazebo) #Append Joint1 array with Gazebo joint value
+	Joint3 = np.append(Joint3, Joint3ValFromGazebo) #Append Joint1 array with Gazebo joint value
+	# time.sleep(0.01)
 
 
 Joint1 = np.sort(Joint1) #This just puts the random values in ascending order for sake of this example. Not needed when using real Gazebo values
@@ -60,17 +39,17 @@ Joint3 = np.sort(Joint3) #This just puts the random values in ascending order fo
 
 
 plt.subplot(3, 1, 1)
-plt.plot(Time1, Joint1)
+plt.plot(Time, Joint1)
 plt.title("Joint 1 Position vs Time")
 plt.xlabel("Time (seconds)")
 plt.ylabel("Position (Radians)")
 plt.subplot(3, 1, 2)
-plt.plot(Time2, Joint2)
+plt.plot(Time, Joint2)
 plt.title("Joint 2 Position vs Time")
 plt.xlabel("Time (seconds)")
 plt.ylabel("Position (Radians)")
 plt.subplot(3, 1, 3)
-plt.plot(Time3, Joint3)
+plt.plot(Time, Joint3)
 plt.title("Joint 3 Position vs Time")
 plt.xlabel("Time (seconds)")
 plt.ylabel("Position (meters)")
