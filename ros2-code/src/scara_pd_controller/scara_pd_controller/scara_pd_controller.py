@@ -97,7 +97,7 @@ class ScaraPDController(Node):
             self.joint1_data_array = np.append(self.joint1_data_array, q1)
             self.joint2_data_array = np.append(self.joint2_data_array, q2)
             self.joint3_data_array = np.append(self.joint3_data_array, q3)
-            # Increment iterator
+            # Increment iterator, update the last time data was dumped
             self.curr_time_iterator += 1
             self.last_time = time.time()
         
