@@ -105,6 +105,7 @@ class ScaraPDController(Node):
         if (self.curr_time_iterator >= len(self.time_array)) and not self.graph_generated:
             plt.subplot(3, 1, 1)
             plt.plot(self.time_array, self.joint1_data_array)
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_q1))
             plt.title("Joint 1 Position vs Time")
             plt.xlabel("Time (seconds)")
             plt.ylabel("Position (Radians)")
@@ -190,6 +191,10 @@ class ScaraPDController(Node):
         # Reset the timer iterator and graphing flag
         self.curr_time_iterator = 0
         self.graph_generated = False
+        # Reset joint data arrays
+        self.joint1_data_array = np.array([])
+        self.joint2_data_array = np.array([])
+        self.joint3_data_array = np.array([])
 
         # Return the acknowledgement
         response.ok = True
