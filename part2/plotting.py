@@ -1,6 +1,5 @@
 # Some pseudo code to assist with the graphing elements of the assignment
 
-import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
 import random
@@ -19,11 +18,9 @@ Time2 = np.array([])
 Time3 = np.array([])
 
 starttime=time.time()
-lasttime=starttime
-
+end_time = starttime + (10*60)
 	
-	
-while True:
+while starttime <= end_time:
 
 	Joint1ValFromGazebo = random.randrange(0,10) #This will actually be for inserting the real joint value from Gazebo
 	Joint2ValFromGazebo = random.randrange(0,10) #This will actually be for inserting the real joint value from Gazebo
@@ -44,7 +41,7 @@ while True:
 		laptime3 = time.time()-starttime
 		Time3 = np.append(Time3, laptime3)
 
-	time.sleep(.1)
+	time.sleep(0.01)
 	if (Joint1ValFromGazebo == Joint1_ref) and (Joint2ValFromGazebo == Joint2_ref) and (Joint3ValFromGazebo == Joint3_ref):
 		print("Joint Reference Value Achieved")
 		break
