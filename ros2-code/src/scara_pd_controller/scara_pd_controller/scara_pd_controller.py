@@ -8,6 +8,8 @@ from rbe500_custom_interfaces.srv import ScaraRefPos
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
 from controller_manager_msgs.srv import SwitchController
+import numpy as np
+import time
 
 # Node for subscriber, publisher, service, and client
 class ScaraPDController(Node):
@@ -37,9 +39,12 @@ class ScaraPDController(Node):
         # Initialize member variables for client
         self.req: SwitchController.Request = SwitchController.Request()
         # Initialize member variables for timing/graphing
-        self.q1_timer: float = 0.0
-        self.q2_timer: float = 0.0
-        self.q3_timer: float = 0.0
+        self.time_array = np.arange(0, 10, .01)
+        self.curr_time_iterator = 0
+        self.joint1_data_array = np.array([])
+        self.joint2_data_array = np.array([])
+        self.joint3_data_array = np.array([])
+        self.last_time = time.time()
 
         # Create the client that will activate the required controller. 
         self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
@@ -79,7 +84,17 @@ class ScaraPDController(Node):
             self.awaiting_ref_pos_count += 1
 
     def dump_graph_data(self, joint_state_msg):
-        pass
+        if (self.curr_time_iterator < len(self.time_array)) and (time.time() - self.last_time >= 0.01):
+            # Show elapsed time difference
+            print(f"The elapsed time is {time.time() - self.last_time}")
+            # Get joint position values
+            q1 = joint_state_msg.position[0]
+            q2 = joint_state_msg.position[1]
+            q3 = joint_state_msg.position[2]
+            # Increment iterator
+            self.curr_time_iterator += 1
+            self.last_time = time.time()
+
     
     def run_controller(self, joint_state_msg):
         """
@@ -141,6 +156,9 @@ class ScaraPDController(Node):
         # Set flag that we've received the goal position
         self.received_ref_pos = True
         print("We're ready to start our controller!")
+
+        # Reset the timer iterator
+        self.curr_time_iterator = 0
 
         # Return the acknowledgement
         response.ok = True
