@@ -10,6 +10,7 @@ from std_msgs.msg import Float64MultiArray
 from controller_manager_msgs.srv import SwitchController
 import numpy as np
 import time
+from matplotlib import pyplot as plt
 
 # Node for subscriber, publisher, service, and client
 class ScaraPDController(Node):
@@ -45,6 +46,7 @@ class ScaraPDController(Node):
         self.joint2_data_array = np.array([])
         self.joint3_data_array = np.array([])
         self.last_time = time.time()
+        self.graph_generated = False
 
         # Create the client that will activate the required controller. 
         self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
@@ -91,9 +93,37 @@ class ScaraPDController(Node):
             q1 = joint_state_msg.position[0]
             q2 = joint_state_msg.position[1]
             q3 = joint_state_msg.position[2]
+            # Append values to joint data arrays
+            self.joint1_data_array = np.append(self.joint1_data_array, q1)
+            self.joint2_data_array = np.append(self.joint2_data_array, q2)
+            self.joint3_data_array = np.append(self.joint3_data_array, q3)
             # Increment iterator
             self.curr_time_iterator += 1
             self.last_time = time.time()
+        
+        # Plot graph if we are done sampling
+        if (self.curr_time_iterator >= len(self.time_array)) and not self.graph_generated:
+            plt.subplot(3, 1, 1)
+            plt.plot(self.time_array, self.joint1_data_array)
+            plt.title("Joint 1 Position vs Time")
+            plt.xlabel("Time (seconds)")
+            plt.ylabel("Position (Radians)")
+            plt.subplot(3, 1, 2)
+            plt.plot(self.time_array, self.joint2_data_array)
+            plt.title("Joint 2 Position vs Time")
+            plt.xlabel("Time (seconds)")
+            plt.ylabel("Position (Radians)")
+            plt.subplot(3, 1, 3)
+            plt.plot(self.time_array, self.joint3_data_array)
+            plt.title("Joint 3 Position vs Time")
+            plt.xlabel("Time (seconds)")
+            plt.ylabel("Position (meters)")
+            plt.subplots_adjust(bottom=0.05,
+                                top=.95,
+                                wspace=0.6,
+                                hspace=0.6)
+            plt.show()
+            self.graph_generated = True
 
     
     def run_controller(self, joint_state_msg):
@@ -157,8 +187,9 @@ class ScaraPDController(Node):
         self.received_ref_pos = True
         print("We're ready to start our controller!")
 
-        # Reset the timer iterator
+        # Reset the timer iterator and graphing flag
         self.curr_time_iterator = 0
+        self.graph_generated = False
 
         # Return the acknowledgement
         response.ok = True
