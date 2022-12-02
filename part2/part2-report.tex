@@ -18,6 +18,7 @@
 \usepackage[font=footnotesize]{caption}
 \usepackage{subcaption}
 \usepackage{lipsum}
+\usepackage[export]{adjustbox}
 
 \graphicspath{{./images/}}
 
@@ -413,6 +414,24 @@
     the result of a test run we did with all gain values set to 10.
     \vspace{0.15in}
     \lstinputlisting[language=python, firstline=88, lastline=143]{../ros2-code/src/scara_pd_controller/scara_pd_controller/scara_pd_controller.py}
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{test_run_controller.png}
+        \caption{An example set of plots that our graphing code generated, with all gains set to 10}
+    \end{figure}
+    The \lstinline{dump_graph_data} function is called every time that the 
+    \lstinline{joint_states_callback} function is 
+    called. This produces a significant amount of data, very quickly. Therefore, 
+    we start this function with an `if' statement that will only run the following 
+    code if it has been at least .01 seconds. We check to see if the iterator 
+    variable is less than 1000, to ensure that the arrays end up having the same 
+    dimensions for plotting. Once the joint value arrays have been filled to 
+    maximum capacity, we then create a $3\times1$ subplot where each joint is plotted 
+    against time.\\
+    \vspace{0in}\\
+    Later in the code, we reset both the joint value arrays and the iterator. 
+    This allows us to enter a new reference position for the simulation to 
+    achieve and the plotting will occur without having to entirely restart 
+    the simulation.
 \end{homeworkProblem}
 
 \nobreak\extramarks{Problem 2}{}\nobreak{}
