@@ -18,6 +18,7 @@
 \usepackage[font=footnotesize]{caption}
 \usepackage{subcaption}
 \usepackage{lipsum}
+\usepackage[export]{adjustbox}
 
 \graphicspath{{./images/}}
 
@@ -381,34 +382,126 @@
     operational, so now we can move on to the tuning and graphing of the controller.
 \end{homeworkProblem}
 
-\nobreak\extramarks{Problem 2}{}\nobreak{}
-
-\begin{homeworkProblem}[Problem 2]
-    \subsection{Tuning the PD Controller}
-    \lipsum[1]\\
-    \vspace{0in}\\
-    \lipsum[2]\\
-    \vspace{0in}\\
-    \lipsum[3]\\
-    \vspace{0in}\\
-    \lipsum[4]\\
-    \vspace{0in}\\
-\end{homeworkProblem}
-
 \nobreak\extramarks{Problem 3}{}\nobreak{}
 
 \begin{homeworkProblem}[Problem 3]
     \subsection{Graphing the PD Controller}
-    \lipsum[1]\\
+    \vspace{0.1in}
+    \textit{\textbf{Note:} We did Problem 3 before Problem 2 in order to aid our tuning better.}\\
     \vspace{0in}\\
-    \lipsum[2]\\
+    In order to plot the system, an iterative process was used. Throughout this
+    process, the values of the joints are evaluated over a 10 second period, 
+    therefore giving the system enough time to achieve the reference positions. 
+    In addition to visually seeing how the system is reacting, these plots also 
+    assist with tuning the of the controller gains. These plots offer a quick 
+    and accurate way to see the overshoot and settling time of the system. The 
+    code for plotting the joints' position versus time lives in the 
+    \lstinline{scara_pd_controller.py} 
+    file. To begin, we initialize a time array, ranging from 0 to 10 seconds with a 
+    .01 second increment, which produces an array with a length of 1000. Next, an 
+    iterator is created that is later used for looping purposes. Three empty arrays 
+    are also created which will later be filled with the current joint positions at 
+    each instance of time of the simulation. Continually, the current time is 
+    instantiated to offer a reference of time later. Finally, a flag is created that 
+    informs us whether the plots have been generated yet. Inside the 
+    \lstinline{joint_states_callback} function, the \lstinline{dump_graph_data} 
+    function is called; which is where the real plotting occurs.\\
     \vspace{0in}\\
-    \lipsum[3]\\
+    The code snippet on the next page shows the portion of the code that generates the plots using 
+    the \lstinline{dump_graph_data} function. In the body of the first `if' statement,
+    we append the joint position values to the arrays. The second `if' statement  
+    generates and displays the plots. An example figure is shown in Figure 2, which was
+    the result of a test run we did with all gain values set to 10.
+    \vspace{0.15in}
+    \lstinputlisting[language=python, firstline=88, lastline=143]{../ros2-code/src/scara_pd_controller/scara_pd_controller/scara_pd_controller.py}
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{test_run_controller.png}
+        \caption{An example set of plots that our graphing code generated, with all gains set to 10}
+    \end{figure}
+    The \lstinline{dump_graph_data} function is called every time that the 
+    \lstinline{joint_states_callback} function is 
+    called. This produces a significant amount of data, very quickly. Therefore, 
+    we start this function with an `if' statement that will only run the following 
+    code if it has been at least .01 seconds. We check to see if the iterator 
+    variable is less than 1000, to ensure that the arrays end up having the same 
+    dimensions for plotting. Once the joint value arrays have been filled to 
+    maximum capacity, we then create a $3\times1$ subplot where each joint is plotted 
+    against time.\\
     \vspace{0in}\\
-    \lipsum[4]\\
-    \vspace{0in}\\
-    \lipsum[5]\\
-    \vspace{0in}\\
+    Later in the code, we reset both the joint value arrays and the iterator. 
+    This allows us to enter a new reference position for the simulation to 
+    achieve and the plotting will occur without having to entirely restart 
+    the simulation.
+\end{homeworkProblem}
+
+\nobreak\extramarks{Problem 2}{}\nobreak{}
+
+\begin{homeworkProblem}[Problem 2]
+    \subsection{Tuning the PD Controller}
+    \vspace{0.15in}
+    To begin the tuning process, we chose an arbitrary value of 10 for the 
+    derivative and proportional gains for each joint. This simply provided 
+    us with a starting point for tuning to begin. From there, we adjusted 
+    the gain values of each joint until the plots had minimal overshoot 
+    with a settling time of approximately two seconds. It should be noted 
+    that while adjusting gain values, certain combinations caused worse 
+    behavior from the system. This indicated to us that we overcorrected 
+    and needed to back off the gain values a bit. We adjusted our gain values 
+    based on the table shown in lectures, as seen below.\\
+    % \vspace{0in}\\
+    \begin{table}[h!]
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \textbf{Parameter} & \textbf{Rise time} & \textbf{Overshoot} & \textbf{Settling time} & \textbf{Steady-state error} & \textbf{Stability} \\
+            \hline
+            $\mathbf{K_p}$ & Decrease & Increase & Small change & Decrease & Degrade\\
+            \hline
+            $\mathbf{K_d}$ & Minor change & Decrease & Decrease & No effect in theory & Improve if $K_d$ small \\
+            \hline
+            \end{tabular}
+            \caption{This table helps tuning the gain values. Behavior described herein is for increasing the parameters.}
+        \end{center}
+    \end{table}\\
+    After tuning the system, the following gain values were settled upon to use for 
+    the PD controller for our SCARA robot:
+    \begin{table}[h!]
+        \begin{center}
+            \begin{tabular}{|c|c|c|}
+                \hline
+                \textbf{Joint} & $\mathbf{K_d}$ & $\mathbf{K_p}$\\
+                \hline
+                \textbf{1} & 8.6 & 11.1\\
+                \textbf{2} & 9.1 & 10.5\\
+                \textbf{3} & 12.5 & 10.0\\
+                \hline
+            \end{tabular}
+            \caption{Tuned gains for our SCARA robot}
+        \end{center}
+    \end{table}\\
+    Once the gain values had been properly adjusted, the system was tested 
+    with three different reference joint positions. These reference positions 
+    and the resulting plots can be seen in the series of three figures, starting 
+    on the next page. Please note that we started the first plot (Figure 3) at the 
+    `home' position where $q_1=0$, $q_2=0$, $q_3=0$. We then used the final 
+    position of the first plot as the initial position of the second plot (Figure 4).
+    Similarly, the final position of the second plot was used as the initial 
+    position of the third plot (Figure 5).\\
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{ref_pos1.png}
+        \caption{Result for setting reference positions to
+        $\mathbf{q_1 = 1.57}$, $\mathbf{q_2 = 1.57}$, $\mathbf{q_3 = 0.99}$}
+    \end{figure}
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{ref_pos2.png}
+        \caption{Result for setting reference positions to
+        $\mathbf{q_1 = 0.75}$, $\mathbf{q_2 = 0.8}$, $\mathbf{q_3 = 0.5}$}
+    \end{figure}
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{ref_pos3.png}
+        \caption{Result for setting reference positions to
+        $\mathbf{q_1 = 1.15}$, $\mathbf{q_2 = 1.3}$, $\mathbf{q_3 = -0.05}$}
+    \end{figure}
 \end{homeworkProblem}
 
 \end{document}
