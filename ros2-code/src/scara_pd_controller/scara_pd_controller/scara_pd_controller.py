@@ -103,8 +103,8 @@ class ScaraPDController(Node):
             self.last_time = time.time()
         
         # Plot graph if we are done sampling
-        # TODO: Add comments
         if (self.curr_time_iterator >= len(self.time_array)) and not self.graph_generated:
+            # Create subplot 1
             plt.subplot(3, 1, 1)
             plt.plot(self.time_array, self.joint1_data_array, label="Current position")
             plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_q1), label="Reference position")
@@ -112,6 +112,8 @@ class ScaraPDController(Node):
             plt.title("Joint 1 Position vs Time")
             plt.xlabel("Time (seconds)")
             plt.ylabel("Position (Radians)")
+
+            # Create subplot 2
             plt.subplot(3, 1, 2)
             plt.plot(self.time_array, self.joint2_data_array, label="Current position")
             plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_q2), label="Reference position")
@@ -119,6 +121,8 @@ class ScaraPDController(Node):
             plt.title("Joint 2 Position vs Time")
             plt.xlabel("Time (seconds)")
             plt.ylabel("Position (Radians)")
+
+            # Create subplot 3
             plt.subplot(3, 1, 3)
             plt.plot(self.time_array, self.joint3_data_array, label="Current position")
             plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_q3), label="Reference position")
@@ -126,11 +130,15 @@ class ScaraPDController(Node):
             plt.title("Joint 3 Position vs Time")
             plt.xlabel("Time (seconds)")
             plt.ylabel("Position (meters)")
+
+            # Size the plots better for better visual appearance
             plt.subplots_adjust(bottom=0.05,
                                 top=.95,
                                 wspace=0.6,
                                 hspace=0.6)
             plt.show()
+
+            # Mark that we have generated this graph so that we don't continuously generate it
             self.graph_generated = True
 
     
