@@ -54,7 +54,7 @@ class ScaraPDController(Node):
         # running. We exit the program in this case because trying to call the service
         # while Gazebo is starting up causes errors. This Node needs to be started
         # after Gazebo is already running.
-        if not self.client.wait_for_service(timeout_sec=2):
+        if not self.client.wait_for_service(timeout_sec=0.5):
             print('The /controller_manager/switch_controller service is not available. Please launch Gazebo before running this package. Exiting.')
             sys.exit()
         # Activate the Gazebo effort controller
