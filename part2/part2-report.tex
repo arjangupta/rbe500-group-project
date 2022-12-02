@@ -381,34 +381,42 @@
     operational, so now we can move on to the tuning and graphing of the controller.
 \end{homeworkProblem}
 
-\nobreak\extramarks{Problem 2}{}\nobreak{}
-
-\begin{homeworkProblem}[Problem 2]
-    \subsection{Tuning the PD Controller}
-    \lipsum[1]\\
-    \vspace{0in}\\
-    \lipsum[2]\\
-    \vspace{0in}\\
-    \lipsum[3]\\
-    \vspace{0in}\\
-    \lipsum[4]\\
-    \vspace{0in}\\
-\end{homeworkProblem}
-
 \nobreak\extramarks{Problem 3}{}\nobreak{}
 
 \begin{homeworkProblem}[Problem 3]
     \subsection{Graphing the PD Controller}
-    \lipsum[1]\\
+    \vspace{0.1in}
+    \textit{\textbf{Note:} We did Problem 3 before Problem 2 in order to aid our tuning better.}\\
     \vspace{0in}\\
-    \lipsum[2]\\
+    In order to plot the system, an iterative process was used. Throughout this
+    process, the values of the joints are evaluated over a 10 second period, 
+    therefore giving the system enough time to achieve the reference positions. 
+    In addition to visually seeing how the system is reacting, these plots also 
+    assist with tuning the of the controller gains. These plots offer a quick 
+    and accurate way to see the overshoot and settling time of the system. The 
+    code for plotting the joints' position versus time lives in the 
+    \lstinline{scara_pd_controller.py} 
+    file. To begin, we initialize a time array, ranging from 0 to 10 seconds with a 
+    .01 second increment, which produces an array with a length of 1000. Next, an 
+    iterator is created that is later used for looping purposes. Three empty arrays 
+    are also created which will later be filled with the current joint positions at 
+    each instance of time of the simulation. Continually, the current time is 
+    instantiated to offer a reference of time later. Finally, a flag is created that 
+    informs us whether the plots have been generated yet. Inside the 
+    \lstinline{joint_states_callback} function, the \lstinline{dump_graph_data} 
+    function is called; which is where the real plotting occurs.\\
     \vspace{0in}\\
-    \lipsum[3]\\
-    \vspace{0in}\\
-    \lipsum[4]\\
-    \vspace{0in}\\
-    \lipsum[5]\\
-    \vspace{0in}\\
+    The code snippet below shows the portion of the code that generates the plots using 
+    the \lstinline{dump_graph_data} function. In the body of the first `if' statement,
+    we append the joint position values to the arrays. The second `if' statement  
+    generates and displays the plots.
+\end{homeworkProblem}
+
+\nobreak\extramarks{Problem 2}{}\nobreak{}
+
+\begin{homeworkProblem}[Problem 2]
+    \subsection{Tuning the PD Controller}
+    
 \end{homeworkProblem}
 
 \end{document}
