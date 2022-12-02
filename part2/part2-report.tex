@@ -476,8 +476,32 @@
                 \textbf{3} & 12.5 & 10.0\\
                 \hline
             \end{tabular}
+            \caption{Tuned gains for our SCARA robot}
         \end{center}
-    \end{table}
+    \end{table}\\
+    Once the gain values had been properly adjusted, the system was tested 
+    with three different reference joint positions. These reference positions 
+    and the resulting plots can be seen in the series of three figures, starting 
+    on the next page. Please note that we started the first plot (Figure 3) at the 
+    `home' position where $q_1=0$, $q_2=0$, $q_3=0$. We then used the final 
+    position of the first plot as the initial position of the second plot (Figure 4).
+    Similarly, the final position of the second plot was used as the initial 
+    position of the third plot (Figure 5).\\
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{ref_pos1.png}
+        \caption{Result for setting reference positions to
+        $\mathbf{q_1 = 1.57}$, $\mathbf{q_2 = 1.57}$, $\mathbf{q_3 = 0.99}$}
+    \end{figure}
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{ref_pos2.png}
+        \caption{Result for setting reference positions to
+        $\mathbf{q_1 = 0.75}$, $\mathbf{q_2 = 0.8}$, $\mathbf{q_3 = 0.5}$}
+    \end{figure}
+    \begin{figure}[h]
+        \includegraphics[width=8.5in, height=6.5in, center]{ref_pos3.png}
+        \caption{Result for setting reference positions to
+        $\mathbf{q_1 = 1.15}$, $\mathbf{q_2 = 1.3}$, $\mathbf{q_3 = -0.05}$}
+    \end{figure}
 \end{homeworkProblem}
 
 \end{document}
