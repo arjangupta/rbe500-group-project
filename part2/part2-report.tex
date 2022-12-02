@@ -223,17 +223,16 @@
     anti-clockwise direction in the XY plane, whereas the prismatic joint did
     not do anything. With some more experimentation we realized:
     \begin{itemize}
+        \item The efforts are in the form of force, $F=ma$. Since our
+        joint masses are simply 1 kg each, the efforts we published had the same
+        magnitude as the acceleration we were applying.
         \item Acceleration due to gravity, approximated in magnitude
-        to $9.8 m/s^2$ was acting on the prismatic joint. Therefore, in order to
-        make it move upward we needed to publish an effort with an acceleration
-        of anything less than $-9.8 m/s^2$.
+        to $9.8 \ m/s^2$ was acting on the prismatic joint. Therefore, in order to
+        make it move upward we needed to publish an effort of magnitude less 
+        than $-9.8 \ N$. The negative sign is a consequence of the direction of 
+        motion we have defined in our URDF file.
         \item In order to hold the prismatic joint
-        in at any height, we needed to apply exactly $-9.8 m/s^2$ acceleration.
-        The negative sign is a consequence of the direction of motion we have
-        defined in our URDF file. 
-        \item Since our
-        joint masses are simply 1, we were able to publish a joint effort as simply
-        $-9.8$, for example.
+        in at any height, we needed to apply exactly $-9.8 \ N$ of effort. 
         \item We also realized that since there was no opposing force readily
         acting upon the revolute joints, if we executed an effort to them, that
         effort would keep pushing along the joints.
