@@ -438,6 +438,7 @@
 
 \begin{homeworkProblem}[Problem 2]
     \subsection{Tuning the PD Controller}
+    \vspace{0.15in}
     To begin the tuning process, we chose an arbitrary value of 10 for the 
     derivative and proportional gains for each joint. This simply provided 
     us with a starting point for tuning to begin. From there, we adjusted 
@@ -446,20 +447,30 @@
     that while adjusting gain values, certain combinations caused worse 
     behavior from the system. This indicated to us that we overcorrected 
     and needed to back off the gain values a bit. We adjusted our gain values 
-    based on the table shown in lectures, as seen below.
-    \vspace{0.15in}
+    based on the table shown in lectures, as seen below.\\
+    % \vspace{0in}\\
     \begin{table}[h!]
         \begin{center}
             \begin{tabular}{|c|c|c|c|c|c|}
             \hline
-            Parameter & Rise time & Overshoot & Settling time & Steady-state error & Stability \\
+            \textbf{Parameter} & \textbf{Rise time} & \textbf{Overshoot} & \textbf{Settling time} & \textbf{Steady-state error} & \textbf{Stability} \\
             \hline
-            $K_p$ & Decrease & Increase & Small change & Decrease & Degrade\\
+            $\mathbf{K_p}$ & Decrease & Increase & Small change & Decrease & Degrade\\
             \hline
-            $K_d$ & Minor change & Decrease & Decrease & No effect in theory & Improve if $K_d$ small \\
+            $\mathbf{K_d}$ & Minor change & Decrease & Decrease & No effect in theory & Improve if $K_d$ small \\
             \hline
             \end{tabular}
             \caption{This table helps tuning the gain values. Behavior described herein is for increasing the parameters.}
+        \end{center}
+    \end{table}\\
+    After tuning the system, the following gain values were settled upon to use for 
+    the PD controller for our SCARA robot:
+    \begin{table}[h!]
+        \begin{center}
+            \begin{tabular}{|c|c|c|}
+                \hline
+                Joint & 
+            \end{tabular}
         \end{center}
     \end{table}
 \end{homeworkProblem}
