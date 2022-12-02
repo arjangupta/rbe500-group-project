@@ -102,6 +102,7 @@ class ScaraPDController(Node):
             self.last_time = time.time()
         
         # Plot graph if we are done sampling
+        # TODO: Add comments
         if (self.curr_time_iterator >= len(self.time_array)) and not self.graph_generated:
             plt.subplot(3, 1, 1)
             plt.plot(self.time_array, self.joint1_data_array, label="Current position")
