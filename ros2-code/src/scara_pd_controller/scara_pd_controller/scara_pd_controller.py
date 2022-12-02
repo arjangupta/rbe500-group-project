@@ -88,7 +88,8 @@ class ScaraPDController(Node):
     def dump_graph_data(self, joint_state_msg):
         if (self.curr_time_iterator < len(self.time_array)) and (time.time() - self.last_time >= 0.01):
             # Show elapsed time difference
-            print(f"The elapsed time is {time.time() - self.last_time}")
+            if self.curr_time_iterator % 50 == 0:
+                print(f"Collecting data for plotting...")
             # Get joint position values
             q1 = joint_state_msg.position[0]
             q2 = joint_state_msg.position[1]
