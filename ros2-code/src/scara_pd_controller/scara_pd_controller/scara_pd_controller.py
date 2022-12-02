@@ -86,6 +86,7 @@ class ScaraPDController(Node):
             self.awaiting_ref_pos_count += 1
 
     def dump_graph_data(self, joint_state_msg):
+        # Collect graphing data
         if (self.curr_time_iterator < len(self.time_array)) and (time.time() - self.last_time >= 0.01):
             # Show elapsed time difference
             if self.curr_time_iterator % 50 == 0:

@@ -406,10 +406,13 @@
     \lstinline{joint_states_callback} function, the \lstinline{dump_graph_data} 
     function is called; which is where the real plotting occurs.\\
     \vspace{0in}\\
-    The code snippet below shows the portion of the code that generates the plots using 
+    The code snippet on the next page shows the portion of the code that generates the plots using 
     the \lstinline{dump_graph_data} function. In the body of the first `if' statement,
     we append the joint position values to the arrays. The second `if' statement  
-    generates and displays the plots.
+    generates and displays the plots. An example figure is shown in Figure 2, which was
+    the result of a test run we did with all gain values set to 10.
+    \vspace{0.15in}
+    \lstinputlisting[language=python, firstline=88, lastline=143]{../ros2-code/src/scara_pd_controller/scara_pd_controller/scara_pd_controller.py}
 \end{homeworkProblem}
 
 \nobreak\extramarks{Problem 2}{}\nobreak{}
