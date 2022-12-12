@@ -1,4 +1,4 @@
-# RBE 500 Group Assignment #2
+# RBE 500 Group Assignment #3
 # Group 2 - Joshua Gross, Arjan Gupta, Melissa Kelly
 
 import sys
@@ -13,11 +13,11 @@ import time
 from matplotlib import pyplot as plt
 
 # Node for subscriber, publisher, service, and client
-class ScaraPDController(Node):
+class ScaraVelocityController(Node):
 
     def __init__(self):
         # Initialize superclass
-        super().__init__('scara_pd_controller')
+        super().__init__('scara_velocity_controller')
 
         # Initialize member variables for reference position
         self.received_ref_pos: bool = False
@@ -61,7 +61,7 @@ class ScaraPDController(Node):
         self.activate_effort_controller()
 
         # Create the service that receives the reference/goal position
-        self.srv = self.create_service(ScaraRefPos, 'scara_pd_controller', self.set_ref)
+        self.srv = self.create_service(ScaraRefPos, 'scara_velocity_controller', self.set_ref)
         print("Done creating service that will receive reference/goal position.")
 
         # Create the subscriber that receives the joint state information, with a queue of 50 since it is very fast
@@ -230,9 +230,9 @@ class ScaraPDController(Node):
 def main():
     rclpy.init()
 
-    scara_pd_controller = ScaraPDController()
+    scara_velocity_controller = ScaraVelocityController()
 
-    rclpy.spin(scara_pd_controller)
+    rclpy.spin(scara_velocity_controller)
 
     rclpy.shutdown()
 
