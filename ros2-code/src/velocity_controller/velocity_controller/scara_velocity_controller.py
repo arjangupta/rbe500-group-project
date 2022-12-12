@@ -19,13 +19,13 @@ class ScaraVelocityController(Node):
         # Initialize superclass
         super().__init__('scara_velocity_controller')
 
-        # Initialize member variables for reference position
-        self.received_ref_pos: bool = False
-        self.ref_q1: float = 0.0
-        self.ref_q2: float = 0.0
-        self.ref_q3: float = 0.0
+        # Initialize member variables for reference velocities
+        self.received_ref_vel: bool = False
+        self.ref_v1: float = 0.0
+        self.ref_v2: float = 0.0
+        self.ref_v3: float = 0.0
         # Initialize member variables for joint_states subscription
-        self.awaiting_ref_pos_count: int = 0
+        self.awating_ref_vel_count: int = 0
         # Initialize member variables for run_controller method
         # Define gains for q1
         self.Kp1 = 8.6
@@ -38,7 +38,7 @@ class ScaraVelocityController(Node):
         self.Kd3 = 10.0
         self.num_values_received: int = 0 
         # Initialize member variables for client
-        self.req: SwitchController.Request = SwitchController.Request()
+        self.switch_controller_req: SwitchController.Request = SwitchController.Request()
         # Initialize member variables for timing/graphing
         self.time_array = np.arange(0, 10, .01)
         self.curr_time_iterator = 0
@@ -55,8 +55,9 @@ class ScaraVelocityController(Node):
         # while Gazebo is starting up causes errors. This Node needs to be started
         # after Gazebo is already running.
         if not self.client.wait_for_service(timeout_sec=0.5):
-            print('The /controller_manager/switch_controller service is not available. Please launch Gazebo before running this package. Exiting.')
+            print('The /controller_manager/switch_controller service is not available. Please launch Gazebo before running this package, or simply try running this package again.')
             sys.exit()
+        # TODO: Send SCARA to an initial position
         # Activate the Gazebo effort controller
         self.activate_effort_controller()
 
@@ -74,16 +75,16 @@ class ScaraVelocityController(Node):
     
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal position to work against
-        if self.received_ref_pos:
+        if self.received_ref_vel:
             # Record the current positions for graphing
             self.dump_graph_data(joint_state_msg)
             # Perform the work for the PD controller
             self.run_controller(joint_state_msg)
-        elif self.awaiting_ref_pos_count >= 100:
+        elif self.awating_ref_vel_count >= 100:
             print("Receiving joint state info. Awaiting a reference position to be given.")
-            self.awaiting_ref_pos_count = 0
+            self.awating_ref_vel_count = 0
         else:
-            self.awaiting_ref_pos_count += 1
+            self.awating_ref_vel_count += 1
 
     def dump_graph_data(self, joint_state_msg):
         # Collect graphing data
@@ -108,7 +109,7 @@ class ScaraVelocityController(Node):
             # Create subplot 1
             plt.subplot(3, 1, 1)
             plt.plot(self.time_array, self.joint1_data_array, label="Current position")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_q1), label="Reference position")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v1), label="Reference position")
             plt.legend()
             plt.title("Joint 1 Position vs Time")
             plt.xlabel("Time (seconds)")
@@ -117,7 +118,7 @@ class ScaraVelocityController(Node):
             # Create subplot 2
             plt.subplot(3, 1, 2)
             plt.plot(self.time_array, self.joint2_data_array, label="Current position")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_q2), label="Reference position")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v2), label="Reference position")
             plt.legend()
             plt.title("Joint 2 Position vs Time")
             plt.xlabel("Time (seconds)")
@@ -126,7 +127,7 @@ class ScaraVelocityController(Node):
             # Create subplot 3
             plt.subplot(3, 1, 3)
             plt.plot(self.time_array, self.joint3_data_array, label="Current position")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_q3), label="Reference position")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v3), label="Reference position")
             plt.legend()
             plt.title("Joint 3 Position vs Time")
             plt.xlabel("Time (seconds)")
@@ -171,9 +172,9 @@ class ScaraVelocityController(Node):
         
         # ----- Implement controller ------
         # Find errors
-        err_q1 = self.ref_q1 - q1
-        err_q2 = self.ref_q2 - q2
-        err_q3 = self.ref_q3 - q3
+        err_q1 = self.ref_v1 - q1
+        err_q2 = self.ref_v2 - q2
+        err_q3 = self.ref_v3 - q3
         # Find error dots
         err_dot_q1 = -1 * v1
         err_dot_q2 = -1 * v2
@@ -193,15 +194,15 @@ class ScaraVelocityController(Node):
     
     def set_ref(self, request, response):
         # Assign ref values
-        self.ref_q1 = request.q1
-        self.ref_q2 = request.q2
-        self.ref_q3 = request.q3
+        self.ref_v1 = request.q1
+        self.ref_v2 = request.q2
+        self.ref_v3 = request.q3
 
         # Log to terminal that reference/goal position was received
-        print(f"We received reference positions of x:{self.ref_q1} y:{self.ref_q2} z:{self.ref_q3}")
+        print(f"We received reference positions of x:{self.ref_v1} y:{self.ref_v2} z:{self.ref_v3}")
 
         # Set flag that we've received the goal position
-        self.received_ref_pos = True
+        self.received_ref_vel = True
         print("We're ready to start our controller!")
 
         # Reset the timer iterator and graphing flag
@@ -218,11 +219,11 @@ class ScaraVelocityController(Node):
     
     def activate_effort_controller(self):
         # Set the controller we want to activate
-        self.req.activate_controllers = ["forward_effort_controller"]
+        self.switch_controller_req.activate_controllers = ["forward_effort_controller"]
         # Set the controllers we want to deactivate
-        self.req.deactivate_controllers = ["forward_position_controller", "forward_velocity_controller"]
+        self.switch_controller_req.deactivate_controllers = ["forward_position_controller", "forward_velocity_controller"]
         # Start an asynchronous call and then block until it is done
-        future = self.client.call_async(self.req)
+        future = self.client.call_async(self.switch_controller_req)
         rclpy.spin_until_future_complete(self, future)
         # Report the result 
         print(f"The result of the attempt to activate the effort controller is ok: {future.result().ok}")
