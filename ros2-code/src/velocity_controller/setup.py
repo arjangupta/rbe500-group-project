@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'velocity_controller = scara_velocity_controller.scara_velocity_controller:main'
+            'velocity_controller = velocity_controller.scara_velocity_controller:main'
         ],
     },
 )

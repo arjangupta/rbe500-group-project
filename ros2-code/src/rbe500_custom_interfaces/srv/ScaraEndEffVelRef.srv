@@ -1,0 +1,3 @@
+float32 end_effector_vel
+---
+bool ok

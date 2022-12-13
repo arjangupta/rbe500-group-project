@@ -4,7 +4,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
-from rbe500_custom_interfaces.srv import ScaraRefPos
+from rbe500_custom_interfaces.srv import ScaraEndEffVelRef
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
 from controller_manager_msgs.srv import SwitchController
@@ -61,9 +61,11 @@ class ScaraVelocityController(Node):
         # Activate the Gazebo effort controller
         self.activate_effort_controller()
 
-        # Create the service that receives the reference/goal position
-        self.srv = self.create_service(ScaraRefPos, 'scara_velocity_controller', self.set_ref)
-        print("Done creating service that will receive reference/goal position.")
+        # TODO: Create another client that will get the joint velocity references
+
+        # Create the service that receives the reference/goal velocity
+        self.srv = self.create_service(ScaraEndEffVelRef, 'scara_velocity_controller', self.set_ref)
+        print("Done creating service that will receive reference velocity for the end effector.")
 
         # Create the subscriber that receives the joint state information, with a queue of 50 since it is very fast
         self.subscription = self.create_subscription(JointState, '/joint_states', self.joint_states_callback, 100)
