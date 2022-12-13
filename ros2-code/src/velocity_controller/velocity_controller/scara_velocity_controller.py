@@ -4,7 +4,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
-from rbe500_custom_interfaces.srv import ScaraEndEffVelRef
+from rbe500_custom_interfaces.srv import ScaraEndEffVelRef, CalcScaraJointVelRefs
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
 from controller_manager_msgs.srv import SwitchController
@@ -37,8 +37,9 @@ class ScaraVelocityController(Node):
         self.Kp3 = 12.5
         self.Kd3 = 10.0
         self.num_values_received: int = 0 
-        # Initialize member variables for client
-        self.switch_controller_req: SwitchController.Request = SwitchController.Request()
+        # Initialize member variables for clients
+        self.switch_controller_req = SwitchController.Request()
+        self.convert_end_effector_velocity_req = CalcScaraJointVelRefs.Request()
         # Initialize member variables for timing/graphing
         self.time_array = np.arange(0, 10, .01)
         self.curr_time_iterator = 0
@@ -55,18 +56,19 @@ class ScaraVelocityController(Node):
         self.go_to_starting_pose()
 
         # Create the client that will activate the required controller. 
-        self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
+        self.switch_controller_client = self.create_client(SwitchController, '/controller_manager/switch_controller')
         # If we find that we had to wait for the service, it means Gazebo is not 
         # running. We exit the program in this case because trying to call the service
         # while Gazebo is starting up causes errors. This Node needs to be started
         # after Gazebo is already running.
-        if not self.client.wait_for_service(timeout_sec=0.5):
+        if not self.switch_controller_client.wait_for_service(timeout_sec=0.5):
             print('The /controller_manager/switch_controller service is not available. Please launch Gazebo before running this package, or simply try running this package again.')
             sys.exit()
         # Activate the Gazebo effort controller
         self.activate_effort_controller()
 
-        # TODO: Create another client that will get the joint velocity references
+        # Create another client that will get the joint velocity references from our other ROS Node
+        self.velocity_reference_client = self.create_client(CalcScaraJointVelRefs, 'scara_velocity_kinematics')
 
         # Create the service that receives the reference/goal velocity
         self.srv = self.create_service(ScaraEndEffVelRef, 'scara_velocity_controller', self.set_ref)
@@ -211,16 +213,19 @@ class ScaraVelocityController(Node):
         efforts_arr.data = [output_effort_q1, output_effort_q2, output_effort_q3]
         self.efforts_publisher.publish(efforts_arr)
     
-    def set_ref(self, request, response):
-        # Assign ref values
-        self.ref_v1 = request.q1
-        self.ref_v2 = request.q2
-        self.ref_v3 = request.q3
+    def set_ref(self, end_effector_ref_request, end_effector_ref_response):
+        # Assign ref velocity value
+        self.end_effector_ref_vel = end_effector_ref_request.end_effector_vel
 
         # Log to terminal that reference/goal position was received
-        print(f"We received reference positions of x:{self.ref_v1} y:{self.ref_v2} z:{self.ref_v3}")
+        print(f"We received a reference velocity for the end effector:{self.end_effector_ref_vel}")
 
-        # Set flag that we've received the goal position
+        # Send another client request to convert the end effector velocity to joint velocities
+        while not self.velocity_reference_client.wait_for_service(timeout_sec=1.0):
+            print("The velocity kinematics services are not online, waiting...")
+        # TODO: Use the self.convert_end_effector_velocity_req here to send the request and get the conversion
+
+        # Set flag that we've received the goal velocities
         self.received_ref_vel = True
         print("We're ready to start our controller!")
 
@@ -233,8 +238,8 @@ class ScaraVelocityController(Node):
         self.joint3_data_array = np.array([])
 
         # Return the acknowledgement
-        response.ok = True
-        return response
+        end_effector_ref_response.ok = True
+        return end_effector_ref_response
     
     def activate_effort_controller(self):
         # Set the controller we want to activate
@@ -242,7 +247,7 @@ class ScaraVelocityController(Node):
         # Set the controllers we want to deactivate
         self.switch_controller_req.deactivate_controllers = ["forward_position_controller", "forward_velocity_controller"]
         # Start an asynchronous call and then block until it is done
-        future = self.client.call_async(self.switch_controller_req)
+        future = self.switch_controller_client.call_async(self.switch_controller_req)
         rclpy.spin_until_future_complete(self, future)
         # Report the result 
         print(f"The result of the attempt to activate the effort controller is ok: {future.result().ok}")
