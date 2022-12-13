@@ -48,6 +48,10 @@ class ScaraVelocityController(Node):
         self.last_time = time.time()
         self.graph_generated = False
 
+        # TODO: Create pushlisher that will send position 
+        # Send SCARA to an initial position
+        self.go_to_starting_pose()
+
         # Create the client that will activate the required controller. 
         self.client = self.create_client(SwitchController, '/controller_manager/switch_controller')
         # If we find that we had to wait for the service, it means Gazebo is not 
@@ -57,7 +61,6 @@ class ScaraVelocityController(Node):
         if not self.client.wait_for_service(timeout_sec=0.5):
             print('The /controller_manager/switch_controller service is not available. Please launch Gazebo before running this package, or simply try running this package again.')
             sys.exit()
-        # TODO: Send SCARA to an initial position
         # Activate the Gazebo effort controller
         self.activate_effort_controller()
 
@@ -72,8 +75,11 @@ class ScaraVelocityController(Node):
         print("Done creating subscription that receives joint-state information.")
 
         # Create the publisher that will send the joint efforts
-        self.publisher = self.create_publisher(Float64MultiArray, '/forward_effort_controller/commands', 10)
+        self.efforts_publisher = self.create_publisher(Float64MultiArray, '/forward_effort_controller/commands', 10)
         print("Done creating the publisher for sending joint efforts.")
+    
+    def go_to_starting_pose(self):
+        pass
     
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal position to work against
@@ -192,7 +198,7 @@ class ScaraVelocityController(Node):
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
         efforts_arr.data = [output_effort_q1, output_effort_q2, output_effort_q3]
-        self.publisher.publish(efforts_arr)
+        self.efforts_publisher.publish(efforts_arr)
     
     def set_ref(self, request, response):
         # Assign ref values
