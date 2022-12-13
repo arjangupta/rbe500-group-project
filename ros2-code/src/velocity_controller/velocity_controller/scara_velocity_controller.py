@@ -48,7 +48,9 @@ class ScaraVelocityController(Node):
         self.last_time = time.time()
         self.graph_generated = False
 
-        # TODO: Create pushlisher that will send position 
+        # Create pushlisher that will set position
+        self.position_publisher = self.create_publisher(Float64MultiArray, '/forward_position_controller/commands', 10)
+        print("Done creating the publisher for setting initial position.")
         # Send SCARA to an initial position
         self.go_to_starting_pose()
 
@@ -79,7 +81,16 @@ class ScaraVelocityController(Node):
         print("Done creating the publisher for sending joint efforts.")
     
     def go_to_starting_pose(self):
-        pass
+        # A good starting position for our SCARA is a location on the y-axis. One such
+        # position can be achieved by setting joint1 to 150 degrees (2.61799 rad) and
+        # joint2 to 15 degrees (0.261799 rad). The position of the third joint does not
+        # matter since it has no contribution to the overall movement in the y-direction.
+        
+        # Set data
+        efforts_arr: Float64MultiArray = Float64MultiArray()
+        efforts_arr.data = [2.61799, 0.261799, 1.0]
+        # Publish
+        self.efforts_publisher.publish(efforts_arr)
     
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal position to work against
