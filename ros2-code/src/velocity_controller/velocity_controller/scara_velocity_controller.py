@@ -240,7 +240,7 @@ class ScaraVelocityController(Node):
         # Send the request and get the conversion
         self.convert_end_effector_velocity_req.end_effector_ref_vel = self.end_effector_ref_vel
         # Start an asynchronous call and then block until it is done
-        future = self.switch_controller_client.call_async(self.switch_controller_req)
+        future = self.velocity_reference_client.call_async(self.convert_end_effector_velocity_req)
         rclpy.spin_until_future_complete(self, future)
         # Capture the result
         self.ref_v1 = future.result().joint1_velocity
