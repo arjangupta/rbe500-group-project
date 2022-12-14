@@ -13,7 +13,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='arjan',
+    maintainer='Arjan Gupta',
     maintainer_email='agupta11@wpi.edu',
     description='Velocity controller for SCARA',
     license='Property of WPI',
