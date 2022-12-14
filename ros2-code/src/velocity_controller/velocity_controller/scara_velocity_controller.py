@@ -27,16 +27,18 @@ class ScaraVelocityController(Node):
         # Initialize member variables for joint_states subscription
         self.awating_ref_vel_count: int = 0
         # Initialize member variables for run_controller method
-        # Define gains for q1
+        # Define gains for v1
         self.Kp1 = 8.6
         self.Kd1 = 11.1
-        # Define gains for q2
+        # Define gains for v2
         self.Kp2 = 9.1
         self.Kd2 = 10.5
-        # Define gains for q3
+        # Define gains for v3
         self.Kp3 = 12.5
         self.Kd3 = 10.0
         self.num_values_received: int = 0 
+        self.accel_approx_last_time = time.time()
+        self.accel_approx_time_used: bool = False
         # Initialize member variables for clients
         self.switch_controller_req = SwitchController.Request()
         self.convert_end_effector_velocity_req = CalcScaraJointVelRefs.Request()
@@ -46,7 +48,7 @@ class ScaraVelocityController(Node):
         self.joint1_data_array = np.array([])
         self.joint2_data_array = np.array([])
         self.joint3_data_array = np.array([])
-        self.last_time = time.time()
+        self.plot_data_last_time = time.time()
         self.graph_generated = False
 
         # Create pushlisher that will set position
@@ -112,21 +114,21 @@ class ScaraVelocityController(Node):
 
     def dump_graph_data(self, joint_state_msg):
         # Collect graphing data
-        if (self.curr_time_iterator < len(self.time_array)) and (time.time() - self.last_time >= 0.01):
+        if (self.curr_time_iterator < len(self.time_array)) and (time.time() - self.plot_data_last_time >= 0.01):
             # Show elapsed time difference
             if self.curr_time_iterator % 50 == 0:
                 print(f"Collecting data for plotting...")
             # Get joint position values
-            q1 = joint_state_msg.position[0]
-            q2 = joint_state_msg.position[1]
-            q3 = joint_state_msg.position[2]
+            v1 = joint_state_msg.velocity[0]
+            v2 = joint_state_msg.velocity[1]
+            v3 = joint_state_msg.position[2]
             # Append values to joint data arrays
-            self.joint1_data_array = np.append(self.joint1_data_array, q1)
-            self.joint2_data_array = np.append(self.joint2_data_array, q2)
-            self.joint3_data_array = np.append(self.joint3_data_array, q3)
+            self.joint1_data_array = np.append(self.joint1_data_array, v1)
+            self.joint2_data_array = np.append(self.joint2_data_array, v2)
+            self.joint3_data_array = np.append(self.joint3_data_array, v3)
             # Increment iterator, update the last time data was dumped
             self.curr_time_iterator += 1
-            self.last_time = time.time()
+            self.plot_data_last_time = time.time()
         
         # Plot graph if we are done sampling
         if (self.curr_time_iterator >= len(self.time_array)) and not self.graph_generated:
@@ -176,10 +178,6 @@ class ScaraVelocityController(Node):
         and computes the output efforts that need to be applied to the
         corresponding joints.
         """
-        # Get joint position values
-        q1 = joint_state_msg.position[0]
-        q2 = joint_state_msg.position[1]
-        q3 = joint_state_msg.position[2]
         # Get joint velocity values
         v1 = joint_state_msg.velocity[0]
         v2 = joint_state_msg.velocity[1]
@@ -188,7 +186,6 @@ class ScaraVelocityController(Node):
         # Conditional printing so that we're not printing continuously
         if self.num_values_received >= 250:
             print("Controller is running!")
-            print(f"Current q values are q1:{q1}, q2:{q2}, q3:{q3}")
             print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
             self.num_values_received = 0
         else:
@@ -196,24 +193,24 @@ class ScaraVelocityController(Node):
         
         # ----- Implement controller ------
         # Find errors
-        err_q1 = self.ref_v1 - q1
-        err_q2 = self.ref_v2 - q2
-        err_q3 = self.ref_v3 - q3
+        err_v1 = self.ref_v1 - v1
+        err_v2 = self.ref_v2 - v2
+        err_v3 = self.ref_v3 - v3
         # Find error dots
-        err_dot_q1 = -1 * v1
-        err_dot_q2 = -1 * v2
-        err_dot_q3 = -1 * v3
+        err_dot_v1 = -1 * accel1
+        err_dot_v2 = -1 * accel2
+        err_dot_v3 = -1 * accel3
         # The modeled controller for each joint 
         # (as described in our report) is
         # F = K_p*E - K_d*v
-        output_effort_q1: float = self.Kp1*err_q1 + self.Kd1*err_dot_q1
-        output_effort_q2: float = self.Kp2*err_q2 + self.Kd2*err_dot_q2
-        output_effort_q3: float = self.Kp3*err_q3 + self.Kd3*err_dot_q3
-        # For q3, there is also a force of gravity acting upon it
-        output_effort_q3 += -9.8
+        output_effort_v1: float = self.Kp1*err_v1 + self.Kd1*err_dot_v1
+        output_effort_v2: float = self.Kp2*err_v2 + self.Kd2*err_dot_v2
+        output_effort_v3: float = self.Kp3*err_v3 + self.Kd3*err_dot_v3
+        # For v3, there is also a force of gravity acting upon it
+        output_effort_v3 += -9.8
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
-        efforts_arr.data = [output_effort_q1, output_effort_q2, output_effort_q3]
+        efforts_arr.data = [output_effort_v1, output_effort_v2, output_effort_v3]
         self.efforts_publisher.publish(efforts_arr)
     
     def set_ref(self, end_effector_ref_request, end_effector_ref_response):
