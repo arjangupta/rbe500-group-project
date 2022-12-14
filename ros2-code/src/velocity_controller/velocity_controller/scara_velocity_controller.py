@@ -92,6 +92,7 @@ class ScaraVelocityController(Node):
         # position can be achieved by setting joint1 to 150 degrees (2.61799 rad) and
         # joint2 to 15 degrees (0.261799 rad). The position of the third joint does not
         # matter since it has no contribution to the overall movement in the y-direction.
+        
         # Wait a bit - for some reason an instant publish
         # does not work, a delay is required
         time.sleep(1)
@@ -103,9 +104,9 @@ class ScaraVelocityController(Node):
         print("Done publishing to move SCARA to initial position.")
     
     def joint_states_callback(self, joint_state_msg):
-        # Only take action if we have a reference/goal position to work against
+        # Only take action if we have a reference/goal velocity to work against
         if self.received_ref_vel:
-            # Record the current positions for graphing
+            # Record the current velocitys for graphing
             self.dump_graph_data(joint_state_msg)
             # Perform the work for the PD controller
             self.run_controller(joint_state_msg)
@@ -123,10 +124,10 @@ class ScaraVelocityController(Node):
             # Show elapsed time difference
             if self.curr_time_iterator % 50 == 0:
                 print(f"Collecting data for plotting...")
-            # Get joint position values
+            # Get joint velocity values
             v1 = joint_state_msg.velocity[0]
             v2 = joint_state_msg.velocity[1]
-            v3 = joint_state_msg.position[2]
+            v3 = joint_state_msg.velocity[2]
             # Append values to joint data arrays
             self.joint1_data_array = np.append(self.joint1_data_array, v1)
             self.joint2_data_array = np.append(self.joint2_data_array, v2)
@@ -177,8 +178,8 @@ class ScaraVelocityController(Node):
     
     def run_controller(self, joint_state_msg):
         """
-        This function runs our PD controller. It grabs the current positions
-        and velocities of all three joints of our SCARA robot, applies the
+        This function runs our PD controller. It grabs the current
+        velocities of all three joints of our SCARA robot, applies the
         proportional and derivative gains for the error and derivative error,
         and computes the output efforts that need to be applied to the
         corresponding joints.
@@ -231,7 +232,7 @@ class ScaraVelocityController(Node):
         # Assign ref velocity value
         self.end_effector_ref_vel = end_effector_ref_request.end_effector_vel
 
-        # Log to terminal that reference/goal position was received
+        # Log to terminal that reference/goal velocity was received
         print(f"We received a reference velocity for the end effector:{self.end_effector_ref_vel}")
 
         # Send another client request to convert the end effector velocity to joint velocities

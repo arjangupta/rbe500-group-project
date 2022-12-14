@@ -96,7 +96,7 @@ class ScaraVelocityKinematics(Node):
 
         # ----- Calculate joint velocities ------
         self.calculate_jacobian()
-        indiv_joint_velocities = np.dot(np.linalg.pinv(self.Jacobian), endeff)
+        indiv_joint_velocities = np.dot(np.linalg.pinv(self.Jacobian), endeff, dtype=float)
         response.joint1_velocity = indiv_joint_velocities[0]
         response.joint2_velocity = indiv_joint_velocities[1]
         response.joint3_velocity = indiv_joint_velocities[2]
