@@ -44,7 +44,7 @@ class ScaraVelocityController(Node):
         self.last_v3: float = 0.0
         # --- Initialize member variables for clients ---
         self.switch_controller_req = SwitchController.Request()
-        self.convert_end_effector_velocity_req = CalcScaraJointVelRefs.Request()
+        self.convert_end_effector_velocity_req: CalcScaraJointVelRefs.Request() = CalcScaraJointVelRefs.Request()
         # --- Initialize member variables for timing/graphing ---
         self.time_array = np.arange(0, 10, .01)
         self.curr_time_iterator = 0
@@ -237,7 +237,17 @@ class ScaraVelocityController(Node):
         # Send another client request to convert the end effector velocity to joint velocities
         while not self.velocity_reference_client.wait_for_service(timeout_sec=1.0):
             print("The velocity kinematics services are not online, waiting...")
-        # TODO: Use the self.convert_end_effector_velocity_req here to send the request and get the conversion
+        # Send the request and get the conversion
+        self.convert_end_effector_velocity_req.end_effector_ref_vel = self.end_effector_ref_vel
+        # Start an asynchronous call and then block until it is done
+        future = self.switch_controller_client.call_async(self.switch_controller_req)
+        rclpy.spin_until_future_complete(self, future)
+        # Capture the result
+        self.ref_v1 = future.result().joint1_velocity
+        self.ref_v2 = future.result().joint2_velocity
+        self.ref_v3 = future.result().joint3_velocity
+        # Report the result 
+        print(f"Obtained reference velocities for joints - v1: {self.ref_v1} v2: {self.ref_v2} v3: {self.ref_v3}")
 
         # Set flag that we've received the goal velocities
         self.received_ref_vel = True

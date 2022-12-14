@@ -18,17 +18,17 @@ class ScaraVelocityKinematics(Node):
         self.p3=1
 
         # Define joint variables
-        self.theta1 = 1.274
-        self.theta2 = 0.593
+        self.theta1 = 0
+        self.theta2 = 0
         self.theta3 = 0
-        self.disp3 = -1.2
+        self.disp3 = 0
 
         # Define empty Jacobian
         self.Jacobian = np.zeros((6,3), dtype=float)
 
         # Create the service
         self.srv = self.create_service(CalcScaraJointVelRefs, 'velocity_inv_kin_service', self.calculate_inverse_velocity_kin)
-        print("Done creating service that receives end effector velocity and returns joint velocities.")
+        print("Done creating service that calculates inverse velocity kinematics.")
 
         # TODO: Forward velocity kin service
 
@@ -90,7 +90,7 @@ class ScaraVelocityKinematics(Node):
         self.disp3  = joint_state_msg.position[2]
 
     def calculate_inverse_velocity_kin(self, request, response):
-        # Log to terminal that position was received
+        # Log to terminal that end effector velocity was received
         endeff = np.array([[0],[request.end_effector_ref_vel],[0],[0],[0],[0]])
         print(f"We received an end effector velocity of {endeff}")
 
@@ -101,7 +101,7 @@ class ScaraVelocityKinematics(Node):
         response.joint2_velocity = indiv_joint_velocities[1]
         response.joint3_velocity = indiv_joint_velocities[2]
 
-        print("Calculated the reference velocity for each joint, sending response")
+        print(f"Calculated the reference velocity for each joint as v1:{response.joint1_velocity} v2:{response.joint2_velocity} v3:{response.joint3_velocity}, sending response")
 
         return response
 
