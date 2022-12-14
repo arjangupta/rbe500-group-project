@@ -203,9 +203,9 @@ class ScaraVelocityController(Node):
         err_v3 = self.ref_v3 - v3
         # Approximate the acceleration by using the derivative 
         # approximation technique shown in Week 8 lecture
-        accel1 = (v1 - self.last_v1)/self.accel_approx_last_time
-        accel2 = (v2 - self.last_v2)/self.accel_approx_last_time
-        accel3 = (v3 - self.last_v3)/self.accel_approx_last_time
+        accel1 = (v1 - self.last_v1)/(time.time() - self.accel_approx_last_time)
+        accel2 = (v2 - self.last_v2)/(time.time() - self.accel_approx_last_time)
+        accel3 = (v3 - self.last_v3)/(time.time() - self.accel_approx_last_time)
         # Update the last velocities
         self.last_v1 = v1
         self.last_v2 = v2

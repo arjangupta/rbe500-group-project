@@ -101,6 +101,8 @@ class ScaraVelocityKinematics(Node):
         response.joint2_velocity = indiv_joint_velocities[1]
         response.joint3_velocity = indiv_joint_velocities[2]
 
+        print("Calculated the reference velocity for each joint, sending response")
+
         return response
 
 
