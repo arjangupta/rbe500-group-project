@@ -1,0 +1,5 @@
+float32 end_effector_ref_vel
+---
+float32 joint1_velocity
+float32 joint2_velocity
+float32 joint3_velocity

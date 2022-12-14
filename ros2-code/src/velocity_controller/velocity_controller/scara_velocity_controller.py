@@ -129,30 +129,30 @@ class ScaraVelocityController(Node):
         if (self.curr_time_iterator >= len(self.time_array)) and not self.graph_generated:
             # Create subplot 1
             plt.subplot(3, 1, 1)
-            plt.plot(self.time_array, self.joint1_data_array, label="Current position")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v1), label="Reference position")
+            plt.plot(self.time_array, self.joint1_data_array, label="Current velocity")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v1), label="Reference velocity")
             plt.legend()
-            plt.title("Joint 1 Position vs Time")
+            plt.title("Joint 1 Velocity vs Time")
             plt.xlabel("Time (seconds)")
-            plt.ylabel("Position (Radians)")
+            plt.ylabel("Velocity (Radians)")
 
             # Create subplot 2
             plt.subplot(3, 1, 2)
-            plt.plot(self.time_array, self.joint2_data_array, label="Current position")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v2), label="Reference position")
+            plt.plot(self.time_array, self.joint2_data_array, label="Current velocity")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v2), label="Reference velocity")
             plt.legend()
-            plt.title("Joint 2 Position vs Time")
+            plt.title("Joint 2 Velocity vs Time")
             plt.xlabel("Time (seconds)")
-            plt.ylabel("Position (Radians)")
+            plt.ylabel("Velocity (Radians)")
 
             # Create subplot 3
             plt.subplot(3, 1, 3)
-            plt.plot(self.time_array, self.joint3_data_array, label="Current position")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v3), label="Reference position")
+            plt.plot(self.time_array, self.joint3_data_array, label="Current velocity")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v3), label="Reference velocity")
             plt.legend()
-            plt.title("Joint 3 Position vs Time")
+            plt.title("Joint 3 Velocity vs Time")
             plt.xlabel("Time (seconds)")
-            plt.ylabel("Position (meters)")
+            plt.ylabel("Velocity (m/s)")
 
             # Size the plots better for better visual appearance
             plt.subplots_adjust(bottom=0.05,
