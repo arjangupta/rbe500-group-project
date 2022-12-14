@@ -4,6 +4,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
+from rclpy.task import Future
 from rbe500_custom_interfaces.srv import ScaraEndEffVelRef, CalcScaraJointVelRefs
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
@@ -235,9 +236,9 @@ class ScaraVelocityController(Node):
         # Send the request and get the conversion
         self.convert_end_effector_velocity_req.end_effector_ref_vel = self.end_effector_ref_vel
         # Start an asynchronous call and then block until it is done
-        future = self.velocity_reference_client.call_async(self.convert_end_effector_velocity_req)
+        future: Future = self.velocity_reference_client.call_async(self.convert_end_effector_velocity_req)
         print("About to spin until future complete.")
-        rclpy.spin_until_future_complete(self, future)
+        rclpy.spin_until_future_complete(node=self, future=future, timeout_sec=5)
         # Capture the result
         self.ref_v1 = future.result().joint1_velocity
         self.ref_v2 = future.result().joint2_velocity
