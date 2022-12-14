@@ -19,30 +19,33 @@ class ScaraVelocityController(Node):
         # Initialize superclass
         super().__init__('scara_velocity_controller')
 
-        # Initialize member variables for reference velocities
+        # --- Initialize member variables for reference velocities ---
         self.received_ref_vel: bool = False
         self.ref_v1: float = 0.0
         self.ref_v2: float = 0.0
         self.ref_v3: float = 0.0
-        # Initialize member variables for joint_states subscription
+        # --- Initialize member variables for joint_states subscription ---
         self.awating_ref_vel_count: int = 0
-        # Initialize member variables for run_controller method
+        # --- Initialize member variables for run_controller method ---
         # Define gains for v1
-        self.Kp1 = 8.6
-        self.Kd1 = 11.1
+        self.Kp1:float = 8.6
+        self.Kd1:float = 11.1
         # Define gains for v2
-        self.Kp2 = 9.1
-        self.Kd2 = 10.5
+        self.Kp2:float = 9.1
+        self.Kd2:float = 10.5
         # Define gains for v3
-        self.Kp3 = 12.5
-        self.Kd3 = 10.0
+        self.Kp3:float = 12.5
+        self.Kd3:float = 10.0
         self.num_values_received: int = 0 
         self.accel_approx_last_time = time.time()
-        self.accel_approx_time_used: bool = False
-        # Initialize member variables for clients
+        # Store the last known velocities
+        self.last_v1: float = 0.0
+        self.last_v2: float = 0.0
+        self.last_v3: float = 0.0
+        # --- Initialize member variables for clients ---
         self.switch_controller_req = SwitchController.Request()
         self.convert_end_effector_velocity_req = CalcScaraJointVelRefs.Request()
-        # Initialize member variables for timing/graphing
+        # --- Initialize member variables for timing/graphing ---
         self.time_array = np.arange(0, 10, .01)
         self.curr_time_iterator = 0
         self.joint1_data_array = np.array([])
@@ -111,6 +114,8 @@ class ScaraVelocityController(Node):
             self.awating_ref_vel_count = 0
         else:
             self.awating_ref_vel_count += 1
+        # Update the time captured for the last set of velocities we received
+        self.accel_approx_last_time = time.time()
 
     def dump_graph_data(self, joint_state_msg):
         # Collect graphing data
@@ -196,6 +201,15 @@ class ScaraVelocityController(Node):
         err_v1 = self.ref_v1 - v1
         err_v2 = self.ref_v2 - v2
         err_v3 = self.ref_v3 - v3
+        # Approximate the acceleration by using the derivative 
+        # approximation technique shown in Week 8 lecture
+        accel1 = (v1 - self.last_v1)/self.accel_approx_last_time
+        accel2 = (v2 - self.last_v2)/self.accel_approx_last_time
+        accel3 = (v3 - self.last_v3)/self.accel_approx_last_time
+        # Update the last velocities
+        self.last_v1 = v1
+        self.last_v2 = v2
+        self.last_v3 = v3
         # Find error dots
         err_dot_v1 = -1 * accel1
         err_dot_v2 = -1 * accel2

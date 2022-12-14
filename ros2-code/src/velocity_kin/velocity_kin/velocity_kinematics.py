@@ -91,7 +91,7 @@ class ScaraVelocityKinematics(Node):
 
     def calculate_inverse_velocity_kin(self, request, response):
         # Log to terminal that position was received
-        endeff = request.end_effector_ref_vel
+        endeff = np.array([[0],[request.end_effector_ref_vel],[0],[0],[0],[0]])
         print(f"We received an end effector velocity of {endeff}")
 
         # ----- Calculate joint velocities ------
