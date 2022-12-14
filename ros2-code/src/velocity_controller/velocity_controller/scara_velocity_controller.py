@@ -89,10 +89,10 @@ class ScaraVelocityController(Node):
         # matter since it has no contribution to the overall movement in the y-direction.
         
         # Set data
-        efforts_arr: Float64MultiArray = Float64MultiArray()
-        efforts_arr.data = [2.61799, 0.261799, 1.0]
+        pos_arr = Float64MultiArray()
+        pos_arr.data = [2.61799, 0.261799, 1.0]
         # Publish
-        self.efforts_publisher.publish(efforts_arr)
+        self.position_publisher.publish(pos_arr)
     
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal position to work against

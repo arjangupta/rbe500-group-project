@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'veloctiy_kinematics = veloctiy_kinematics.scara_veloctiy_kinematics:main'
         ],
     },
 )
