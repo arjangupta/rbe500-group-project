@@ -228,13 +228,7 @@ class ScaraVelocityController(Node):
         efforts_arr.data = [output_effort_v1, output_effort_v2, output_effort_v3]
         self.efforts_publisher.publish(efforts_arr)
     
-    def set_ref(self, end_effector_ref_request, end_effector_ref_response):
-        # Assign ref velocity value
-        self.end_effector_ref_vel = end_effector_ref_request.end_effector_vel
-
-        # Log to terminal that reference/goal velocity was received
-        print(f"We received a reference velocity for the end effector:{self.end_effector_ref_vel}")
-
+    def get_target_velocities(self):
         # Send another client request to convert the end effector velocity to joint velocities
         while not self.velocity_reference_client.wait_for_service(timeout_sec=1.0):
             print("The velocity kinematics services are not online, waiting...")
@@ -242,11 +236,27 @@ class ScaraVelocityController(Node):
         self.convert_end_effector_velocity_req.end_effector_ref_vel = self.end_effector_ref_vel
         # Start an asynchronous call and then block until it is done
         future = self.velocity_reference_client.call_async(self.convert_end_effector_velocity_req)
+        print("About to spin until future complete.")
         rclpy.spin_until_future_complete(self, future)
         # Capture the result
         self.ref_v1 = future.result().joint1_velocity
         self.ref_v2 = future.result().joint2_velocity
         self.ref_v3 = future.result().joint3_velocity
+
+    def set_ref(self, end_effector_ref_request, end_effector_ref_response):
+        """
+        This function is responsible for taking the user's input end effector velocity and calling
+        the velocity kinematics node to obtain the reference velocities for each joint 
+        """
+        # Assign ref velocity value
+        self.end_effector_ref_vel = end_effector_ref_request.end_effector_vel
+
+        # Log to terminal that reference/goal velocity was received
+        print(f"We received a reference velocity for the end effector:{self.end_effector_ref_vel}")
+
+        # Get target velocities
+        self.get_target_velocities()
+
         # Report the result 
         print(f"Obtained reference velocities for joints - v1: {self.ref_v1} v2: {self.ref_v2} v3: {self.ref_v3}")
 

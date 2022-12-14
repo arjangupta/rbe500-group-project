@@ -91,15 +91,15 @@ class ScaraVelocityKinematics(Node):
 
     def calculate_inverse_velocity_kin(self, request, response):
         # Log to terminal that end effector velocity was received
-        endeff = np.array([[0],[request.end_effector_ref_vel],[0],[0],[0],[0]])
+        endeff = np.array([[0],[request.end_effector_ref_vel],[0],[0],[0],[0]], dtype=float)
         print(f"We received an end effector velocity of {endeff}")
 
         # ----- Calculate joint velocities ------
         self.calculate_jacobian()
-        indiv_joint_velocities = np.dot(np.linalg.pinv(self.Jacobian), endeff, dtype=float)
-        response.joint1_velocity = indiv_joint_velocities[0]
-        response.joint2_velocity = indiv_joint_velocities[1]
-        response.joint3_velocity = indiv_joint_velocities[2]
+        indiv_joint_velocities = np.dot(np.linalg.pinv(self.Jacobian), endeff)
+        response.joint1_velocity = float(indiv_joint_velocities[0])
+        response.joint2_velocity = float(indiv_joint_velocities[1])
+        response.joint3_velocity = float(indiv_joint_velocities[2])
 
         print(f"Calculated the reference velocity for each joint as v1:{response.joint1_velocity} v2:{response.joint2_velocity} v3:{response.joint3_velocity}, sending response")
 
