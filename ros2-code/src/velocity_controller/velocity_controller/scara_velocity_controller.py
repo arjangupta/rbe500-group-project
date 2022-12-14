@@ -22,21 +22,21 @@ class ScaraVelocityController(Node):
 
         # --- Initialize member variables for reference velocities ---
         self.received_ref_vel: bool = False
-        self.ref_v1: float = 0.0
-        self.ref_v2: float = 0.0
+        self.ref_v1: float = 3.1
+        self.ref_v2: float = 3.1
         self.ref_v3: float = 0.0
         # --- Initialize member variables for joint_states subscription ---
         self.awating_ref_vel_count: int = 0
         # --- Initialize member variables for run_controller method ---
         # Define gains for v1
-        self.Kp1:float = 8.6
-        self.Kd1:float = 11.1
+        self.Kp1:float = 0.1
+        self.Kd1:float = 0.1
         # Define gains for v2
-        self.Kp2:float = 9.1
-        self.Kd2:float = 10.5
+        self.Kp2:float = 0.1
+        self.Kd2:float = 0.1
         # Define gains for v3
-        self.Kp3:float = 12.5
-        self.Kd3:float = 10.0
+        self.Kp3:float = 1
+        self.Kd3:float = 1
         self.num_values_received: int = 0 
         self.accel_approx_last_time = time.time()
         # Store the last known velocities
@@ -256,7 +256,7 @@ class ScaraVelocityController(Node):
         print(f"We received a reference velocity for the end effector:{self.end_effector_ref_vel}")
 
         # Get target velocities
-        self.get_target_velocities()
+        # self.get_target_velocities()
 
         # Report the result 
         print(f"Obtained reference velocities for joints - v1: {self.ref_v1} v2: {self.ref_v2} v3: {self.ref_v3}")

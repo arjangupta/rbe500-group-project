@@ -4,6 +4,7 @@ from rclpy.node import Node
 from rbe500_custom_interfaces.srv import CalcScaraJointVelRefs
 from sensor_msgs.msg import JointState
 import numpy as np
+import time
 
 # Service Node for velocity kinematics
 class ScaraVelocityKinematics(Node):
@@ -100,6 +101,8 @@ class ScaraVelocityKinematics(Node):
         response.joint1_velocity = float(indiv_joint_velocities[0])
         response.joint2_velocity = float(indiv_joint_velocities[1])
         response.joint3_velocity = float(indiv_joint_velocities[2])
+
+        time.sleep(3)
 
         print(f"Calculated the reference velocity for each joint as v1:{response.joint1_velocity} v2:{response.joint2_velocity} v3:{response.joint3_velocity}, sending response")
 
