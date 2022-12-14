@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'velocity_kinematics'
+package_name = 'velocity_kin'
 
 setup(
     name=package_name,
@@ -13,14 +13,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Arjan Gupta',
-    maintainer_email='agupta11@wpi.edu',
-    description='ROS Node for Velocity Kinematics Calculations',
-    license='Property of WPI',
+    maintainer='arjan',
+    maintainer_email='arjangupta95@gmail.com',
+    description='TODO: Package description',
+    license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'veloctiy_kinematics = veloctiy_kinematics.scara_veloctiy_kinematics:main'
+            'vk = velocity_kin.velocity_kinematics:main'
         ],
     },
 )
