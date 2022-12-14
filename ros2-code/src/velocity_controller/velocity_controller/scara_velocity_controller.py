@@ -90,7 +90,7 @@ class ScaraVelocityController(Node):
         
         # Set data
         pos_arr = Float64MultiArray()
-        pos_arr.data = [2.61799, 0.261799, 1.0]
+        pos_arr.data = [0.261799, 2.61799, 1.0]
         # Publish
         self.position_publisher.publish(pos_arr)
     
@@ -102,7 +102,7 @@ class ScaraVelocityController(Node):
             # Perform the work for the PD controller
             self.run_controller(joint_state_msg)
         elif self.awating_ref_vel_count >= 100:
-            print("Receiving joint state info. Awaiting a reference position to be given.")
+            print("Receiving joint state info. Awaiting a reference end effector velocity to be given.")
             self.awating_ref_vel_count = 0
         else:
             self.awating_ref_vel_count += 1
