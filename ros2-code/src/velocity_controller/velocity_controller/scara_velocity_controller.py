@@ -68,7 +68,7 @@ class ScaraVelocityController(Node):
         self.activate_effort_controller()
 
         # Create another client that will get the joint velocity references from our other ROS Node
-        self.velocity_reference_client = self.create_client(CalcScaraJointVelRefs, 'scara_velocity_kinematics')
+        self.velocity_reference_client = self.create_client(CalcScaraJointVelRefs, 'velocity_inv_kin_service')
 
         # Create the service that receives the reference/goal velocity
         self.srv = self.create_service(ScaraEndEffVelRef, 'scara_velocity_controller', self.set_ref)
@@ -137,7 +137,7 @@ class ScaraVelocityController(Node):
             plt.legend()
             plt.title("Joint 1 Velocity vs Time")
             plt.xlabel("Time (seconds)")
-            plt.ylabel("Velocity (Radians)")
+            plt.ylabel("Velocity (Radians/s)")
 
             # Create subplot 2
             plt.subplot(3, 1, 2)
@@ -146,7 +146,7 @@ class ScaraVelocityController(Node):
             plt.legend()
             plt.title("Joint 2 Velocity vs Time")
             plt.xlabel("Time (seconds)")
-            plt.ylabel("Velocity (Radians)")
+            plt.ylabel("Velocity (Radians/s)")
 
             # Create subplot 3
             plt.subplot(3, 1, 3)
