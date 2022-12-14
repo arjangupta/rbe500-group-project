@@ -13,10 +13,10 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='arjan',
-    maintainer_email='arjangupta95@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Arjan Gupta',
+    maintainer_email='agupta11@wpi.edu',
+    description='ROS Node for Velocity Kinematics Calculations',
+    license='Property of WPI',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
