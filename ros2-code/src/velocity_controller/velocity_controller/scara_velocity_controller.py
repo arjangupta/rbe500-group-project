@@ -194,7 +194,7 @@ class ScaraVelocityController(Node):
         v3 = joint_state_msg.velocity[2]
 
         # Conditional printing so that we're not printing continuously
-        if self.num_values_received >= 250:
+        if self.num_values_received >= 100:
             print("Controller is running!")
             print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
             self.num_values_received = 0
@@ -234,9 +234,11 @@ class ScaraVelocityController(Node):
         if abs(0 - p2) <= 0.01:
             self.ref_v2 = 0.0
             output_effort_v2 = 0.0
+        # Show efforts
+        print(f"effort1 is {output_effort_v1} and effort2 is {output_effort_v2}")
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
-        efforts_arr.data = [output_effort_v1, output_effort_v2, output_effort_v3]
+        efforts_arr.data = [output_effort_v1, output_effort_v2, 0]
         self.efforts_publisher.publish(efforts_arr)
     
     def get_target_velocities(self):
