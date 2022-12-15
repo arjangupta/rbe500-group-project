@@ -57,12 +57,6 @@ class ScaraVelocityController(Node):
         self.plot_data_last_time = time.time()
         self.graph_generated = False
 
-        # Create pushlisher that will set position
-        self.position_publisher = self.create_publisher(Float64MultiArray, '/forward_position_controller/commands', 10)
-        print("Done creating the publisher for setting initial position.")
-        # Send SCARA to an initial position
-        self.go_to_starting_pose()
-
         # Create the client that will activate the required controller. 
         self.switch_controller_client = self.create_client(SwitchController, '/controller_manager/switch_controller')
         # If we find that we had to wait for the service, it means Gazebo is not 
@@ -89,22 +83,6 @@ class ScaraVelocityController(Node):
         # Create the publisher that will send the joint efforts
         self.efforts_publisher = self.create_publisher(Float64MultiArray, '/forward_effort_controller/commands', 10)
         print("Done creating the publisher for sending joint efforts.")
-    
-    def go_to_starting_pose(self):
-        # A good starting position for our SCARA is a location on the y-axis. One such
-        # position can be achieved by setting joint1 to 150 degrees (2.61799 rad) and
-        # joint2 to 15 degrees (0.261799 rad). The position of the third joint does not
-        # matter since it has no contribution to the overall movement in the y-direction.
-        
-        # Wait a bit - for some reason an instant publish
-        # does not work, a delay is required
-        time.sleep(1)
-        # Set data
-        pos_arr = Float64MultiArray()
-        pos_arr.data = [0.261799, 2.61799, 1.0]
-        # Publish
-        self.position_publisher.publish(pos_arr)
-        print("Done publishing to move SCARA to initial position.")
     
     def joint_states_callback(self, joint_state_msg):
         # Only take action if we have a reference/goal velocity to work against
