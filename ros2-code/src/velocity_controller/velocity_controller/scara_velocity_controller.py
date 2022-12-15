@@ -33,10 +33,10 @@ class ScaraVelocityController(Node):
         self.awating_ref_vel_count: int = 0
         # --- Initialize member variables for run_controller method ---
         # Define gains for v1
-        self.Kp1:float = 0.75
+        self.Kp1:float = 0.4
         self.Kd1:float = 0.1
         # Define gains for v2
-        self.Kp2:float = -0.75
+        self.Kp2:float = -0.4
         self.Kd2:float = -0.1
         # Define gains for v3
         self.Kp3:float = 5
@@ -201,16 +201,22 @@ class ScaraVelocityController(Node):
         # For v3, there is also a force of gravity acting upon it
         output_effort_v3 += -9.8
         # Cut off the efforts if we're in position range
-        if abs(1.57 - p1) <= 0.01 and abs(0 - p2) <= 0.01:
-            # self.run_pos_controller(joint_state_msg)
-            pass
-        else:
-            # Show efforts
-            print(f"effort1 is {output_effort_v1} and effort2 is {output_effort_v2}")
-            # Publish the output efforts
-            efforts_arr: Float64MultiArray = Float64MultiArray()
-            efforts_arr.data = [output_effort_v1, output_effort_v2, 0.0]
-            self.efforts_publisher.publish(efforts_arr)
+        # if abs(1.57 - p1) <= 0.01 and abs(0 - p2) <= 0.01:
+        #     # self.run_pos_controller(joint_state_msg)
+        #     pass
+        # else:
+        if abs(1.57 - p1) <= 0.01:
+            self.ref_v1 = 0.0
+            output_effort_v1 = 0.0
+        if abs(0 - p2) <= 0.01:
+            self.ref_v2 = 0.0
+            output_effort_v2 = 0.0
+        # Show efforts
+        print(f"effort1 is {output_effort_v1} and effort2 is {output_effort_v2}")
+        # Publish the output efforts
+        efforts_arr: Float64MultiArray = Float64MultiArray()
+        efforts_arr.data = [output_effort_v1, output_effort_v2, 0.0]
+        self.efforts_publisher.publish(efforts_arr)
     
     def run_pos_controller(self, joint_state_msg):
         """
