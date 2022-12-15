@@ -238,7 +238,7 @@ class ScaraVelocityController(Node):
         print(f"effort1 is {output_effort_v1} and effort2 is {output_effort_v2}")
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
-        efforts_arr.data = [output_effort_v1, output_effort_v2, 0]
+        efforts_arr.data = [output_effort_v1, output_effort_v2, 0.0]
         self.efforts_publisher.publish(efforts_arr)
     
     def get_target_velocities(self):
