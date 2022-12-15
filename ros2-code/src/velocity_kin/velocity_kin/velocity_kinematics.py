@@ -102,8 +102,6 @@ class ScaraVelocityKinematics(Node):
         response.joint2_velocity = float(indiv_joint_velocities[1])
         response.joint3_velocity = float(indiv_joint_velocities[2])
 
-        time.sleep(3)
-
         print(f"Calculated the reference velocity for each joint as v1:{response.joint1_velocity} v2:{response.joint2_velocity} v3:{response.joint3_velocity}, sending response")
 
         return response
