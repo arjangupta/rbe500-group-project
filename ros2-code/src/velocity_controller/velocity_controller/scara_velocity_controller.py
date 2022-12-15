@@ -22,17 +22,17 @@ class ScaraVelocityController(Node):
 
         # --- Initialize member variables for reference velocities ---
         self.received_ref_vel: bool = False
-        self.ref_v1: float = 1
-        self.ref_v2: float = 1
+        self.ref_v1: float = 0.3
+        self.ref_v2: float = 0.3
         self.ref_v3: float = 0.0
         # --- Initialize member variables for joint_states subscription ---
         self.awating_ref_vel_count: int = 0
         # --- Initialize member variables for run_controller method ---
         # Define gains for v1
-        self.Kp1:float = 2
+        self.Kp1:float = 0.5
         self.Kd1:float = 0.1
         # Define gains for v2
-        self.Kp2:float = -2
+        self.Kp2:float = -0.5
         self.Kd2:float = -0.1
         # Define gains for v3
         self.Kp3:float = 5
@@ -185,6 +185,9 @@ class ScaraVelocityController(Node):
         and computes the output efforts that need to be applied to the
         corresponding joints.
         """
+        # # Get joint position values
+        p1 = joint_state_msg.position[0]
+        p2 = joint_state_msg.position[1]
         # Get joint velocity values
         v1 = joint_state_msg.velocity[0]
         v2 = joint_state_msg.velocity[1]
@@ -224,6 +227,11 @@ class ScaraVelocityController(Node):
         output_effort_v3: float = self.Kp3*err_v3 + self.Kd3*err_dot_v3
         # For v3, there is also a force of gravity acting upon it
         output_effort_v3 += -9.8
+        # Cut off the efforts if we're in position range
+        if abs(1.57 - p1) <= 0.001:
+            self.ref_v1 = 0
+        if abs(0 - p2) <= 0.001:
+            self.ref_v2 = 0
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
         efforts_arr.data = [output_effort_v1, output_effort_v2, output_effort_v3]
