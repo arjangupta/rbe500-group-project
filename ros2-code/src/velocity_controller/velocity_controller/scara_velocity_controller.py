@@ -25,16 +25,18 @@ class ScaraVelocityController(Node):
         self.ref_v1: float = 1
         self.ref_v2: float = 1
         self.graph_ref_v1: float = self.ref_v1
-        self.graph_ref_v2: float = self.ref_v2
+        self.graph_ref_v2: float = -1*self.ref_v2
         self.ref_v3: float = 0.0
+        self.ref_q1 = 1.5708
+        self.ref_q2 = 0.0
         # --- Initialize member variables for joint_states subscription ---
         self.awating_ref_vel_count: int = 0
         # --- Initialize member variables for run_controller method ---
         # Define gains for v1
-        self.Kp1:float = 0.5
+        self.Kp1:float = 0.75
         self.Kd1:float = 0.1
         # Define gains for v2
-        self.Kp2:float = -0.5
+        self.Kp2:float = -0.75
         self.Kd2:float = -0.1
         # Define gains for v3
         self.Kp3:float = 5
@@ -150,7 +152,7 @@ class ScaraVelocityController(Node):
     
     def run_controller(self, joint_state_msg):
         """
-        This function runs our PD controller. It grabs the current
+        This function runs our velocity PD controller. It grabs the current
         velocities of all three joints of our SCARA robot, applies the
         proportional and derivative gains for the error and derivative error,
         and computes the output efforts that need to be applied to the
@@ -199,18 +201,59 @@ class ScaraVelocityController(Node):
         # For v3, there is also a force of gravity acting upon it
         output_effort_v3 += -9.8
         # Cut off the efforts if we're in position range
-        if abs(1.57 - p1) <= 0.01:
-            self.ref_v1 = 0.0
-            output_effort_v1 = 0.0
-        if abs(0 - p2) <= 0.01:
-            self.ref_v2 = 0.0
-            output_effort_v2 = 0.0
-        # Show efforts
-        print(f"effort1 is {output_effort_v1} and effort2 is {output_effort_v2}")
+        if abs(1.57 - p1) <= 0.01 and abs(0 - p2) <= 0.01:
+            # self.run_pos_controller(joint_state_msg)
+            pass
+        else:
+            # Show efforts
+            print(f"effort1 is {output_effort_v1} and effort2 is {output_effort_v2}")
+            # Publish the output efforts
+            efforts_arr: Float64MultiArray = Float64MultiArray()
+            efforts_arr.data = [output_effort_v1, output_effort_v2, 0.0]
+            self.efforts_publisher.publish(efforts_arr)
+    
+    def run_pos_controller(self, joint_state_msg):
+        """
+        This function runs our position PD controller. It grabs the current positions
+        and velocities of all three joints of our SCARA robot, applies the
+        proportional and derivative gains for the error and derivative error,
+        and computes the output efforts that need to be applied to the
+        corresponding joints.
+        """
+        # Get joint position values
+        q1 = joint_state_msg.position[0]
+        q2 = joint_state_msg.position[1]
+        q3 = joint_state_msg.position[2]
+        # Get joint velocity values
+        v1 = joint_state_msg.velocity[0]
+        v2 = joint_state_msg.velocity[1]
+        v3 = joint_state_msg.velocity[2]
+
+        # Conditional printing so that we're not printing continuously
+        if self.num_values_received >= 250:
+            print("Controller is running!")
+            print(f"Current q values are q1:{q1}, q2:{q2}, q3:{q3}")
+            print(f"Current joint velocities are v1:{v1}, v2:{v2}, v3:{v3}")
+            self.num_values_received = 0
+        else:
+            self.num_values_received += 1
+        
+        # ----- Implement controller ------
+        # Find errors
+        err_q1 = self.ref_q1 - q1
+        err_q2 = self.ref_q2 - q2
+        # Find error dots
+        err_dot_q1 = -1 * v1
+        err_dot_q2 = -1 * v2
+        # F = K_p*E - K_d*v
+        output_effort_q1: float = self.Kp1*err_q1 + self.Kd1*err_dot_q1
+        output_effort_q2: float = self.Kp2*err_q2 + self.Kd2*err_dot_q2
+        # For q3, there is also a force of gravity acting upon it
+        output_effort_q3 += -9.8
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
-        efforts_arr.data = [output_effort_v1, output_effort_v2, 0.0]
-        self.efforts_publisher.publish(efforts_arr)
+        efforts_arr.data = [output_effort_q1, output_effort_q2, 0.0]
+        self.publisher.publish(efforts_arr)
     
     def get_target_velocities(self):
         # Send another client request to convert the end effector velocity to joint velocities
