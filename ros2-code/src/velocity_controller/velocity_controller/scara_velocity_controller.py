@@ -230,8 +230,10 @@ class ScaraVelocityController(Node):
         # Cut off the efforts if we're in position range
         if abs(1.57 - p1) <= 0.01:
             self.ref_v1 = 0.0
+            output_effort_v1 = 0.0
         if abs(0 - p2) <= 0.01:
             self.ref_v2 = 0.0
+            output_effort_v2 = 0.0
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
         efforts_arr.data = [output_effort_v1, output_effort_v2, output_effort_v3]
