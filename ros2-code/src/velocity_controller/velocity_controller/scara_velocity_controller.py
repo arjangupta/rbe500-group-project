@@ -22,8 +22,8 @@ class ScaraVelocityController(Node):
 
         # --- Initialize member variables for reference velocities ---
         self.received_ref_vel: bool = False
-        self.ref_v1: float = 0.3
-        self.ref_v2: float = 0.3
+        self.ref_v1: float = 1
+        self.ref_v2: float = 1
         self.ref_v3: float = 0.0
         # --- Initialize member variables for joint_states subscription ---
         self.awating_ref_vel_count: int = 0
@@ -228,10 +228,10 @@ class ScaraVelocityController(Node):
         # For v3, there is also a force of gravity acting upon it
         output_effort_v3 += -9.8
         # Cut off the efforts if we're in position range
-        if abs(1.57 - p1) <= 0.001:
-            self.ref_v1 = 0
-        if abs(0 - p2) <= 0.001:
-            self.ref_v2 = 0
+        if abs(1.57 - p1) <= 0.01:
+            self.ref_v1 = 0.0
+        if abs(0 - p2) <= 0.01:
+            self.ref_v2 = 0.0
         # Publish the output efforts
         efforts_arr: Float64MultiArray = Float64MultiArray()
         efforts_arr.data = [output_effort_v1, output_effort_v2, output_effort_v3]
