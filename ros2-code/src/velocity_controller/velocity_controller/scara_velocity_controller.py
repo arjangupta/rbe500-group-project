@@ -24,6 +24,8 @@ class ScaraVelocityController(Node):
         self.received_ref_vel: bool = False
         self.ref_v1: float = 1
         self.ref_v2: float = 1
+        self.graph_ref_v1: float = self.ref_v1
+        self.graph_ref_v2: float = self.ref_v2
         self.ref_v3: float = 0.0
         # --- Initialize member variables for joint_states subscription ---
         self.awating_ref_vel_count: int = 0
@@ -142,7 +144,7 @@ class ScaraVelocityController(Node):
             # Create subplot 1
             plt.subplot(3, 1, 1)
             plt.plot(self.time_array, self.joint1_data_array, label="Current velocity")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v1), label="Reference velocity")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.graph_ref_v1), label="Reference velocity")
             plt.legend()
             plt.title("Joint 1 Velocity vs Time")
             plt.xlabel("Time (seconds)")
@@ -151,7 +153,7 @@ class ScaraVelocityController(Node):
             # Create subplot 2
             plt.subplot(3, 1, 2)
             plt.plot(self.time_array, self.joint2_data_array, label="Current velocity")
-            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.ref_v2), label="Reference velocity")
+            plt.plot(self.time_array, np.full((len(self.time_array), 1), self.graph_ref_v2), label="Reference velocity")
             plt.legend()
             plt.title("Joint 2 Velocity vs Time")
             plt.xlabel("Time (seconds)")
