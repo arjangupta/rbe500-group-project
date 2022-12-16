@@ -21,7 +21,8 @@ class ScaraVelocityController(Node):
         super().__init__('scara_velocity_controller')
 
         # --- Initialize member variables for reference velocities ---
-        self.received_ref_vel: bool = False
+        self.received_ref_vels: bool = False
+        self.end_effector_ref_vel = 3.4 # arbitrarily chosen
         self.ref_v1: float = 1
         self.ref_v2: float = 1
         self.graph_ref_v1: float = self.ref_v1
@@ -73,10 +74,7 @@ class ScaraVelocityController(Node):
 
         # Create another client that will get the joint velocity references from our other ROS Node
         self.velocity_reference_client = self.create_client(CalcScaraJointVelRefs, 'velocity_inv_kin_service')
-
-        # Create the service that receives the reference/goal velocity
-        self.srv = self.create_service(ScaraEndEffVelRef, 'scara_velocity_controller', self.set_ref)
-        print("Done creating service that will receive reference velocity for the end effector.")
+        self.get_target_velocities()
 
         # Create the subscriber that receives the joint state information, with a queue of 50 since it is very fast
         self.subscription = self.create_subscription(JointState, '/joint_states', self.joint_states_callback, 100)
@@ -215,33 +213,24 @@ class ScaraVelocityController(Node):
         self.efforts_publisher.publish(efforts_arr)
     
     def get_target_velocities(self):
+        """
+        This function calls our inverse velocity kinematics node to return our reference joint velocities.
+        """
         # Send another client request to convert the end effector velocity to joint velocities
         while not self.velocity_reference_client.wait_for_service(timeout_sec=1.0):
             print("The velocity kinematics services are not online, waiting...")
         # Send the request and get the conversion
         self.convert_end_effector_velocity_req.end_effector_ref_vel = self.end_effector_ref_vel
+        
         # Start an asynchronous call and then block until it is done
         future: Future = self.velocity_reference_client.call_async(self.convert_end_effector_velocity_req)
         print("About to spin until future complete.")
         rclpy.spin_until_future_complete(node=self, future=future, timeout_sec=5)
+        
         # Capture the result
         self.ref_v1 = future.result().joint1_velocity
         self.ref_v2 = future.result().joint2_velocity
         self.ref_v3 = future.result().joint3_velocity
-
-    def set_ref(self, end_effector_ref_request, end_effector_ref_response):
-        """
-        This function is responsible for taking the user's input end effector velocity and calling
-        the velocity kinematics node to obtain the reference velocities for each joint 
-        """
-        # Assign ref velocity value
-        self.end_effector_ref_vel = end_effector_ref_request.end_effector_vel
-
-        # Log to terminal that reference/goal velocity was received
-        print(f"We received a reference velocity for the end effector:{self.end_effector_ref_vel}")
-
-        # Get target velocities
-        # self.get_target_velocities()
 
         # Report the result 
         print(f"Obtained reference velocities for joints - v1: {self.ref_v1} v2: {self.ref_v2} v3: {self.ref_v3}")
@@ -257,10 +246,6 @@ class ScaraVelocityController(Node):
         self.joint1_data_array = np.array([])
         self.joint2_data_array = np.array([])
         self.joint3_data_array = np.array([])
-
-        # Return the acknowledgement
-        end_effector_ref_response.ok = True
-        return end_effector_ref_response
     
     def activate_effort_controller(self):
         # Set the controller we want to activate
