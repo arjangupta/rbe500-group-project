@@ -23,8 +23,8 @@ class ScaraVelocityController(Node):
         # --- Initialize member variables for reference velocities ---
         self.received_ref_vels: bool = False
         self.end_effector_ref_vel = 1.1 # arbitrarily chosen
-        self.ref_v1: float = 1
-        self.ref_v2: float = 1
+        self.ref_v1: float = 0
+        self.ref_v2: float = 0
         self.graph_ref_v1: float = self.ref_v1
         self.graph_ref_v2: float = self.ref_v2
         self.ref_v3: float = 0.0
@@ -231,6 +231,8 @@ class ScaraVelocityController(Node):
         self.ref_v1 = future.result().joint1_velocity
         self.ref_v2 = future.result().joint2_velocity
         self.ref_v3 = future.result().joint3_velocity
+        self.graph_ref_v1 = self.ref_v1
+        self.graph_ref_v2 = self.ref_v2
 
         # Report the result 
         print(f"Obtained reference velocities for joints - v1: {self.ref_v1} v2: {self.ref_v2} v3: {self.ref_v3}")
