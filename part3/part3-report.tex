@@ -290,6 +290,28 @@ the robot moved in a straight line along the +Y axis and achieved the
             \textit{Joint \#2} & -0.35 & -0.15\\
             \hline
         \end{tabular}
+        \caption{Our resultant gain values after tuning.}
     \end{center}
 \end{table}
+\vspace{-0.15in}
+\subsection{Graphing}
+\vspace{0.15in}
+Similar to the previous assignment, we graph the velocity of 
+joints 1 and 2 against time. Every time that the controller 
+function is called, the \lstinline{dump_graph_data} function is also called. 
+Here, an empty array is appended with the latest velocity value 
+being spit out to the robot. Additionally, an iterator, 
+timer, and graph flag is created. These allow us to keep 
+track of the time between each data point as well as making 
+sure that we only are sampling the controller for a designated 
+10 second period. The graph flag lets us know that the plots 
+have not yet been generated so that we do not run into problems 
+with already having a plot open or creating a new plot at an 
+inappropriate time. Once the 10 second sampling time is 
+complete, we create 2 subplots and plot each 
+joint's collected velocities against time. After the code runs,
+it produces the graph shown below.
+\begin{figure}[h]
+    \includegraphics[width=8.5in, height=6.5in, center]{part3_graph5.png}
+\end{figure}
 \end{document}
