@@ -33,11 +33,11 @@ class ScaraVelocityController(Node):
         self.awating_ref_vel_count: int = 0
         # --- Initialize member variables for run_controller method ---
         # Define gains for v1
-        self.Kp1:float = 0.75
+        self.Kp1:float = 0.85
         self.Kd1:float = 0.1
         # Define gains for v2
-        self.Kp2:float = -0.45
-        self.Kd2:float = -0.1
+        self.Kp2:float = -0.51
+        self.Kd2:float = -0.17
         # Define gains for v3
         self.Kp3:float = 5
         self.Kd3:float = 5
