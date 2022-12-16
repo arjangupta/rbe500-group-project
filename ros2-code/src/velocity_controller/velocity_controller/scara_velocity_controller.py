@@ -36,7 +36,7 @@ class ScaraVelocityController(Node):
         self.Kp1:float = 0.75
         self.Kd1:float = 0.1
         # Define gains for v2
-        self.Kp2:float = -0.3
+        self.Kp2:float = -0.45
         self.Kd2:float = -0.1
         # Define gains for v3
         self.Kp3:float = 5
