@@ -159,7 +159,28 @@
 
 \pagebreak
 
-\section{Preliminary Work for Controller}
+\section{Velocity Kinematics}
+
+\subsection{Calculations}
+
+Solving for both the forward and inverse velocity kinematics are centered around solving the Jacobian matrix. In order to solve for the Jacobian, we first need to establish the linear and angular velocity components in all directions for each of the joints. These expressions will vary dependent upon whether the joint is revolute or prismatic. Once these determinations are made, a matrix of the form seem in the figure below is created, where, each of the elements is a \(3\times1\) matrix. This matrix comes from the lecture slides. 
+
+\[
+    J = \begin{bmatrix}
+        z_0 \times (o_3 - o_0) & z_1 \times (o_3 - o_1) & z_2 \\
+        z_0 & z_1 & 0
+    \end{bmatrix}
+\]
+
+As clearly seen in the above figure, the following elements are needed in order to solve the Jacobian in its entirety:
+$z_0, z_1, z_2, o_0, o_1, o_3$.  These values are found by using elements of the individual transformation matrices found when solving the forward position kinematics. The image below shows what elements of the transformation matrix are extracted in order to solve for Jacobian. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{jacobian_elems.png}
+\end{figure}
+
+\section{Velocity Controller}
 
 The process of creating a controller for this application stems from the previous
 position controller as well as other controllers created throughout the course.
