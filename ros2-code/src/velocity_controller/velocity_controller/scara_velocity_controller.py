@@ -22,11 +22,11 @@ class ScaraVelocityController(Node):
 
         # --- Initialize member variables for reference velocities ---
         self.received_ref_vels: bool = False
-        self.end_effector_ref_vel = 3.4 # arbitrarily chosen
+        self.end_effector_ref_vel = 1.1 # arbitrarily chosen
         self.ref_v1: float = 1
         self.ref_v2: float = 1
         self.graph_ref_v1: float = self.ref_v1
-        self.graph_ref_v2: float = -1*self.ref_v2
+        self.graph_ref_v2: float = self.ref_v2
         self.ref_v3: float = 0.0
         self.ref_q1 = 1.5708
         self.ref_q2 = 0.0
@@ -175,7 +175,7 @@ class ScaraVelocityController(Node):
         # ----- Implement controller ------
         # Find errors
         err_v1 = self.ref_v1 - v1
-        err_v2 = self.ref_v2 - v2
+        err_v2 = (self.ref_v2 * -1) - v2
         err_v3 = self.ref_v3 - v3
         # Approximate the acceleration by using the derivative 
         # approximation technique shown in Week 8 lecture
