@@ -180,6 +180,18 @@ $z_0, z_1, z_2, o_0, o_1, o_3$.  These values are found by using elements of the
     \includegraphics[scale=0.5]{jacobian_elems.png}
 \end{figure}
 
+\subsection{ROS Code}
+
+Programmatically, the elements $z_0, z_1, z_2, o_0, o_1, o_3$ mentioned 
+in the Calculations subsection above are extracted 
+and plugged into the Jacobian framework as seen below from the 
+\lstinline{velocity_kinematics.py} file (which is submitted as part of the 
+\lstinline{velocity_kin} package).
+
+\lstinputlisting[language=python,firstline=63,lastline=84]{../ros2-code/src/velocity_kin/velocity_kin/velocity_kinematics.py}
+
+At this point, we have the ability to solve for the forward or inverse velocity kinematics. By multiplying the Jacobian by the joint’s velocities matrix, we can solve for the velocity of the end effector. Likewise, if the inverse of the Jacobian is multiplied by the end effector velocity matrix, the velocity of each of the joints can be found. It should be noted that since this particular Jacobian is not square, the inverse cannot simply be taken and therefore the pseudo-inverse numpy function is used in order to take the inverse. Having the Jacobian solved and regularly available allows us to calculate the forward and inverse velocity kinematics and therefore create a controller for the robot so achieve the desired movement and speed.
+
 \section{Velocity Controller}
 
 The process of creating a controller for this application stems from the previous
