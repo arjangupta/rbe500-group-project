@@ -254,5 +254,42 @@ the derivative approximation technique as shown in lectures.
  These steps can be seen in the code below.
 \lstinputlisting[language=python,firstline=175,lastline=184]{../ros2-code/src/velocity_controller/velocity_controller/scara_velocity_controller.py}
 The next step is to tune our controller.
-
+\vspace{0.25in}
+\subsection{Tuning the Controller}
+\vspace{0.15in}
+In order to tune the velocity controller, we followed a similar process as the 
+previous assignment. We began with arbitrary proportional and derivative gain values 
+and then ran the simulation to observe the robot's behavior. Once we observed 
+how the robot was behaving, we would adjust the gain values based on the table 
+below found in the lecture slides.
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \textbf{Parameter} & \textbf{Rise time} & \textbf{Overshoot} & \textbf{Settling time} & \textbf{Steady-state error} & \textbf{Stability} \\
+        \hline
+        $\mathbf{K_p}$ & Decrease & Increase & Small change & Decrease & Degrade\\
+        \hline
+        $\mathbf{K_d}$ & Minor change & Decrease & Decrease & No effect in theory & Improve if $K_d$ small \\
+        \hline
+        \end{tabular}
+        \caption{This table helps tuning the gain values. Behavior described herein is for increasing the parameters.}
+    \end{center}
+\end{table}\\
+After tuning, the robot achieved the desired behavior and the gain values were finalized. Using the gain values in the table below, 
+the robot moved in a straight line along the +Y axis and achieved the
+ reference velocities.
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Joint} & $\mathbf{K_p}$ & $\mathbf{K_d}$\\
+            \hline
+            \textit{Joint \#1} & 0.35 & 0.3\\
+            \hline
+            \textit{Joint \#2} & -0.35 & -0.15\\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
 \end{document}
