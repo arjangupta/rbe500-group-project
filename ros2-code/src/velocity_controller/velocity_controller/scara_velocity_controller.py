@@ -5,7 +5,7 @@ import sys
 import rclpy
 from rclpy.node import Node
 from rclpy.task import Future
-from rbe500_custom_interfaces.srv import ScaraEndEffVelRef, CalcScaraJointVelRefs
+from rbe500_custom_interfaces.srv import CalcScaraJointVelRefs
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
 from controller_manager_msgs.srv import SwitchController

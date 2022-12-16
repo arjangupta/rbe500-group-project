@@ -13,6 +13,7 @@ rosidl_generate_interfaces(rbe500_custom_interfaces
   "srv/ScaraRefPos.srv"
   "srv/ScaraEndEffVelRef.srv"
   "srv/CalcScaraJointVelRefs.srv"
+  "srv/CalcScaraEndEffVelRef.srv"
 )
 
 if(BUILD_TESTING)

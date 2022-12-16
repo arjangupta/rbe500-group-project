@@ -1,7 +1,7 @@
 from math import cos, sin
 import rclpy
 from rclpy.node import Node
-from rbe500_custom_interfaces.srv import CalcScaraJointVelRefs
+from rbe500_custom_interfaces.srv import CalcScaraJointVelRefs, CalcScaraEndEffVelRef
 from sensor_msgs.msg import JointState
 import numpy as np
 import time
@@ -27,11 +27,13 @@ class ScaraVelocityKinematics(Node):
         # Define empty Jacobian
         self.Jacobian = np.zeros((6,3), dtype=float)
 
-        # Create the service
+        # Create the inverse velocity kin service
         self.srv = self.create_service(CalcScaraJointVelRefs, 'velocity_inv_kin_service', self.calculate_inverse_velocity_kin)
         print("Done creating service that calculates inverse velocity kinematics.")
 
-        # TODO: Forward velocity kin service
+        # Forward velocity kin service
+        self.srv_fwd = self.create_service(CalcScaraEndEffVelRef, 'velocity_fwd_kind_service', self.calculate_forward_velocity_kin)
+        print("Done creating service that calculates forward velocity kinematics.")
 
         # Create the subscriber that receives the joint state information, with a queue of 50 since it is very fast
         self.subscription = self.create_subscription(JointState, '/joint_states', self.joint_states_callback, 100)
@@ -102,6 +104,20 @@ class ScaraVelocityKinematics(Node):
         response.joint3_velocity = float(indiv_joint_velocities[2])
 
         print(f"Calculated the reference velocity for each joint as v1:{response.joint1_velocity} v2:{response.joint2_velocity} v3:{response.joint3_velocity}, sending response")
+
+        return response
+
+    def calculate_forward_velocity_kin(self, request, response):
+        # Log to terminal what we got
+        print(f"We got joint velocities of {request.v1} {request.v2} {request.v3}")
+
+        # Calculate
+        self.calculate_jacobian()
+        jointVelocities = np.array([[request.v1], [request.v2], [request.v3]])
+        response.endeff = np.dot(self.Jacobian, jointVelocities)
+
+        # Show result
+        print(f"Calculated the reference end effector velocity as {response.endeff}")
 
         return response
 
